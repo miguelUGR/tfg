@@ -18,4 +18,5 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('aplicacion/', include('aplicacion.urls')), #quito el / pk se lo añado en aplicacion/urls.py
 ]
