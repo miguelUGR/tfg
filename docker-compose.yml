@@ -2,11 +2,12 @@ version: "3"
 
 services:
   app:
+    # (.) es el fichero Dockerfile por defecto, si tienes otro(con otro nombre  etc) debemos poner dockerfile: Nombre despues de build
     build:
       context: .
     ports:
       - "8000:8000"
-    volumes:
+    volumes:  #monto mi carpeta aplicacion el raiz de contenedor docker llamando a esa carpeta  aplicacion
       - ./aplicacion:/aplicacion
 
     command: >

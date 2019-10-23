@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+# Añadido para que funcione el path desarrollo
+from django.conf.urls import include, url
+from django.contrib import admin
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('aplicacion/', include('aplicacion.urls')), #quito el / pk se lo añado en aplicacion/urls.py
+    path('desarrollo', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
 ]
