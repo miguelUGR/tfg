@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.account', # new p6 AÑADE Email Addresses login.html (account_signup...etc) son las direcciones propias de DJANGO
     'allauth.socialaccount', # new p6s
 
+    'django_cleanup.apps.CleanupConfig', # PARA ELIMINACION AUTOMATICA imagen de Observaciones
     'desarrollo', #nuevo
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
