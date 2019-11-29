@@ -38,6 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.sites', # new p6
+    'allauth', # new p6
+    'allauth.account', # new p6 AÑADE Email Addresses login.html (account_signup...etc) son las direcciones propias de DJANGO
+    'allauth.socialaccount', # new p6s
+    
     'desarrollo', #nuevo
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
