@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'desarrollo' #nuevo
+    'desarrollo', #nuevo
 ]
+SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

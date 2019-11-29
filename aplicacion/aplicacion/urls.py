@@ -22,5 +22,5 @@ from django.contrib import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('desarrollo', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
+    path('desarrollo/', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
 ]
