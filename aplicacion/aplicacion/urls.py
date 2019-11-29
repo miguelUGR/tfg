@@ -20,7 +20,20 @@ from django.urls import path
 from django.conf.urls import include, url
 from django.contrib import admin
 
+#cosas para la imagen (ImageField)
+from django.conf import settings
+from django.views.static import serve
+#------
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('desarrollo/', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
 ]
+
+#cosas para la imagen (ImageField)
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$',serve, {
+            'document_root' : settings.MEDIA_ROOT,
+        }),
+    ]
