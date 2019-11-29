@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'allauth', # new p6
     'allauth.account', # new p6 AÑADE Email Addresses login.html (account_signup...etc) son las direcciones propias de DJANGO
     'allauth.socialaccount', # new p6s
-    
+
     'desarrollo', #nuevo
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
@@ -75,6 +75,16 @@ TEMPLATES = [
         },
     },
 ]
+
+#------------------------P6----------------------------------
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+LOGIN_REDIRECT_URL = "base" # esto es en caso de que haga el login correctamente te manda donde digas
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #para que no pete cuando metes un correo, pk ten manda un correo de autentificacion en modo pro cuando metes un correo
+#-------------------------------------------------------------
+
 
 WSGI_APPLICATION = 'aplicacion.wsgi.application'
 
