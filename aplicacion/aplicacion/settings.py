@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'desarrollo', #nuevo
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
-
+AUTH_USER_MODEL = 'desarrollo.Usuario'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
