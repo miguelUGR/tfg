@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -44,11 +45,11 @@ INSTALLED_APPS = [
     'allauth.account', # new p6 AÑADE Email Addresses login.html (account_signup...etc) son las direcciones propias de DJANGO
     'allauth.socialaccount', # new p6s
 
-    'django_cleanup.apps.CleanupConfig', # PARA ELIMINACION AUTOMATICA imagen de Observaciones
     'desarrollo', #nuevo
+    'django_cleanup.apps.CleanupConfig' # PARA ELIMINACION AUTOMATICA imagen de Observaciones
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
-AUTH_USER_MODEL = 'desarrollo.Usuario'
+AUTH_USER_MODEL = 'desarrollo.Usuario' #Esto es para poder coger el modelo usuario creado a partir del propio de django
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

@@ -25,8 +25,12 @@ from django.conf import settings
 from django.views.static import serve
 #------
 
+from desarrollo import views #en el segundo url comentado, me hace falta este import(sepa que views estamos utilizando)
+
 urlpatterns = [
+    url(r'^$', views.iniciar, name='iniciar'), # UNA forma de hacer lo mismo que las dos lineas anteriores (SI SOLO PONGO url: http://localhost:8080) se va login.html
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  #p6
     path('desarrollo/', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
 ]
 
@@ -37,3 +41,4 @@ if settings.DEBUG:
             'document_root' : settings.MEDIA_ROOT,
         }),
     ]
+

@@ -35,7 +35,7 @@ class User_Aficionado(models.Model):
 #         def getPrintName(self):
 #             return self.latitude + ", " + self.longitude
 
-class Observatorios(models.Model):
+class Observatorio(models.Model):
     nombre = models.CharField(max_length=150,blank = False,unique=True)
     camara = models.CharField(max_length=50,blank = False)# blank=False es para que por narices metamos un numero, si lo ponemos a True, indicamos que puede meterse campo vacio
     apertura = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],blank= False) 
@@ -49,7 +49,7 @@ class Observatorios(models.Model):
     def __str__(self):
         return self.nombre
 
-class Observaciones(models.Model):
+class Observacion(models.Model):
     nombre = models.CharField(max_length=150,blank = False,unique=True)
     fecha_observacion= models.DateField() 
     # coordenadas = models.OneToOneField(Coordenadas,on_delete=models.CASCADE)
@@ -63,6 +63,16 @@ class Observaciones(models.Model):
     user = models.ForeignKey(User_Astronomo,on_delete=models.PROTECT)
     def __str__(self):
         return self.nombre
+
+class Inscripciones(models.Model):
+    nombre = models.CharField(max_length=100,blank = False,unique=True)
+    Observacion = models.ManyToManyField(Observacion)
+    observatorios = models.ManyToManyField(Observatorio)
+
+    
+    def __str__(self):
+        return self.nombre
+
 
 
 

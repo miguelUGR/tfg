@@ -5,7 +5,9 @@ from . import views
 
 
 urlpatterns = [
-    #path('accounts/', include('allauth.urls')),  #p6
+
     path('hola/<nombre>/', views.hola, name='hola'),
+    path('inicio',views.iniciar, name='inicio'),
+    path('base',views.base, name='base'),
 ] 
 
