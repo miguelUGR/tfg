@@ -12,6 +12,13 @@ from django.conf import settings # hacer referencia a nuestro modelo podemos apo
 
 class Usuario(AbstractUser):
     # blank=False es para que por narices metamos un numero, si lo ponemos a True, indicamos que puede meterse campo vacio
+    ATRO = 'AT'
+    AFICIONADO = 'AF'
+    
+    TIPO_USUARIO = (
+    (ATRO , "Atro"),
+    (AFICIONADO , "Aficionado"))
+    tipoUsuario= models.CharField(max_length = 9, choices = TIPO_USUARIO, default=AFICIONADO )
     def __str__(self):
          return self.username #Esto es para que apareciese en el navegador (lugar Admin de django), el nombre de los platos , en vez de objeto1,2...s
 
