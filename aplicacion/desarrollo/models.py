@@ -10,6 +10,11 @@ from django.conf import settings # hacer referencia a nuestro modelo podemos apo
 # para migrarlo y poder verlo desde el navegador (http://localhost:8080/admin/) ponemos en el terminal primero:
 # - python manage.py migrate
 
+# CASCADE: Cuando se elimina el objeto referenciado, también elimine los objetos que tienen referencias a él 
+# (cuando elimina una publicación de blog, por ejemplo, es posible que también desee eliminar los comentarios). Equivalente SQL: CASCADE.
+# PROTECT: Prohibir la eliminación del objeto referenciado. Para eliminarlo, deberá eliminar todos los objetos 
+# que lo referencian manualmente. Equivalente SQL: RESTRICT.
+
 class Usuario(AbstractUser):
     # blank=False es para que por narices metamos un numero, si lo ponemos a True, indicamos que puede meterse campo vacio
     ATRO = 'AT'
@@ -22,19 +27,6 @@ class Usuario(AbstractUser):
     def __str__(self):
          return self.username #Esto es para que apareciese en el navegador (lugar Admin de django), el nombre de los platos , en vez de objeto1,2...s
 
-# class User_Astronomo(models.Model):
-#     user = models.ForeignKey(
-#                 settings.AUTH_USER_MODEL,
-#                 null=True, blank=True, on_delete=models.CASCADE)
-#     def __str__(self):
-#          return self.user.username
-
-# class User_Aficionado(models.Model):
-#     user = models.ForeignKey(
-#                 settings.AUTH_USER_MODEL,
-#                 null=True, blank=True, on_delete=models.CASCADE)
-#     def __str__(self):
-#          return self.user.username
 
 class Observatorio(models.Model):
     nombre = models.CharField(max_length=150,blank = False,unique=True)
@@ -64,15 +56,25 @@ class Observacion(models.Model):
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.PROTECT)
     def __str__(self):
         return self.nombre
+    class Meta:
+        verbose_name_plural='Observaciones'
 
 class Inscripciones(models.Model):
     nombre = models.CharField(max_length=100,blank = False,unique=True)
-    Observacion = models.ManyToManyField(Observacion)
-    observatorios = models.ManyToManyField(Observatorio)
+    observaciones = models.ForeignKey(Observacion,on_delete=models.CASCADE)#ForeignKey
+    observatorios = models.ForeignKey(Observatorio,on_delete=models.CASCADE)
 
-    
+    class Meta:#para crear clave primaria de dos campos
+        unique_together  = ["observaciones", "observatorios"]
     def __str__(self):
         return self.nombre
+    class Meta:
+        verbose_name_plural='Inscripciones'
+    
+
+
+    
+    
 
 
 

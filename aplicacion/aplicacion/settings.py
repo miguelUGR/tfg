@@ -85,6 +85,9 @@ AUTHENTICATION_BACKENDS = (
 )
 LOGIN_REDIRECT_URL = "base" # esto es en caso de que haga el login correctamente te manda donde digas
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #para que no pete cuando metes un correo, pk ten manda un correo de autentificacion en modo pro cuando metes un correo
+
+ACCOUNT_EMAIL_REQUIRED = True #para que cuando me registre no sea opcional
+ACCOUNT_FORMS ={ 'signup':'desarrollo.forms.MiSignupForm',} #para que coja la clase y añada los campos que queremos para registrarse desde la web
 # LOGIN_URL = '/account/login/'
 #-------------------------------------------------------------
 

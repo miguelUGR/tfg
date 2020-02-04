@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+
+{% block pagina %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generar Observacion</a>
+</div>
+{% endblock %}
+
+
+
+{% block listado %}
+<!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Listado</h1>
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Fecha Observacion</th>
+                      <th>Usuario</th>
+                      <th>Edicion</th>
+                      
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Fecha Observacion</th>
+                      <th>Usuario</th>
+                      <th>Edicion</th>
+
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% if observacion %}
+                        {% for i in observacion %}
+                        <tr>
+                        <td>{{i.nombre}}</td>
+                        <td>{{i.fecha_observacion}}</td>
+                        <td>{{i.user}}</td>
+                        
+                        <td>
+                            <form method="POST"  action="{% url 'editar_observaciones' %}">{% csrf_token %}
+                                <button   class="btn btn-success btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Editar</span>
+                                    
+                                </button>
+                                    
+                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                            </form> 
+                        </td>
+                        <td>
+                            <form method="POST"  action="{% url 'editar_observaciones' %}">{% csrf_token %}
+                                <button   class="btn btn-danger btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Borrar</span>
+                                    
+                                </button>
+                                    
+                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                            </form>
+                        </td>
+                                
+                        </tr>
+                        
+                        
+                        
+                        {% endfor %}
+                    {% endif %}
+                    
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+{% endblock %}
+
+
