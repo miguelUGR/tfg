@@ -3,7 +3,7 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    <h1 class="h3 mb-0 text-gray-800">Observatorios</h1>
     <form method="POST"  action="{% url 'crear_observacion' %}">{% csrf_token %}
       <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Añadir Observacion</button>
     </form> </div>
@@ -20,20 +20,20 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Edicion Observaciones</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Edicion Observatorios</h6>
             </div>
             <div class="card-body">
-              <form method="POST"  action="{% url 'modificar_observacion' %}">{% csrf_token %}
+              <form method="POST"  action="{% url 'modificar_observatorio' %}">{% csrf_token %}
                 {{ form.as_p}}
                 <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
-                <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
+                <a href="{% url 'observatorio' %}" class="btn btn-info btn-icon-split">
                   <span class="icon text-white-50">
                     <i class="fas fa-info-circle"></i>
                   </span>
                   <span class="text">Volver Atras</span>
                 </a>
                 {% if nom_observacion %} <!--Envio el plato viejo, pk a la hora de modificar, debo buscar el viejo eh suplantarlo por el previamente nuevo-->
-                <input type="hidden" name="observacion_vieja" value="{{nom_observacion}}"><!--LO PUEDO HACER CON SESIONES Y ME AHORRO TRABAJA, de echo en borrar lo hare asi-->
+                <!-- <input type="hidden" name="observatorio_viejo" value="{{nom_observatorio}}">LO PUEDO HACER CON SESIONES Y ME AHORRO TRABAJA, de echo en borrar lo hare asi -->
                 {% endif %}
             </form>
             <div>

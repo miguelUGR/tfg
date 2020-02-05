@@ -72,7 +72,10 @@
             {% if name_user.tipoUsuario == "AT" %}
             <a class="collapse-item" href="{% url 'observacion' %}">Observaciones</a>
             {% endif %}
-            <a class="collapse-item" href="cards.html">Cards</a>
+            
+            {% if name_user.tipoUsuario == "AF" %}
+            <a class="collapse-item" href="{% url 'observatorio' %}">Observatorios</a>
+            {% endif %}
           </div>
         </div>
       </li>

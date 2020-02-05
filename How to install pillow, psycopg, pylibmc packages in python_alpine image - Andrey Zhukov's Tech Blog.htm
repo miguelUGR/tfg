@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to install pillow, psycopg, pylibmc packages in python:alpine image  - Andrey Zhukov&#39;s Tech Blog</title>
+
+<meta name="generator" content="Hugo 0.55.0" />
+
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="alternate" type="application/rss+xml" title="Andrey Zhukov&#39;s Tech Blog Feed" href="http://feeds.feedburner.com/sneawo-tech-blog">
+<link rel="shortcut icon" href="https://blog.sneawo.com/favicon.png" type="image/png" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,600" type="text/css" media="all" />
+<link rel="stylesheet" href="https://blog.sneawo.com/css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="https://blog.sneawo.com/js/scripts.js"></script>
+<!--[if lt IE 9]>
+	<script src="https://blog.sneawo.com/js/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+<body class="home blog mr-right-sb mr-mobile" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+	<div class="mr-container mr-container-outer">
+		<div class="mr-header-mobile-nav clearfix"></div>
+			<header class="mr-header" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
+				<div class="mr-container mr-container-inner mr-row clearfix">
+					<div class="mr-custom-header clearfix">
+						<div class="mr-site-identity">
+							<div class="mr-site-logo" role="banner" itemscope="itemscope" itemtype="http://schema.org/Brand">
+								<div class="mr-header-text">
+									<a class="mr-header-text-link" href="https://blog.sneawo.com/" title="Andrey Zhukov&#39;s Tech Blog" rel="home">
+										<h1 class="mr-header-title">Andrey Zhukov&#39;s Tech Blog</h1>
+										
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mr-main-nav-wrap">
+					<nav class="menu" itemscope="itemscope" itemtype="http://schema.org/SiteNavigationElement">
+	<ul class="menu__list">
+		
+		
+		
+			<li class="menu__item "><a class="menu__link" href="https://blog.sneawo.com/">BLOG</a></li>
+		
+			<li class="menu__item "><a class="menu__link" href="https://blog.sneawo.com/post">ARCHIVE</a></li>
+		
+			<li class="menu__item "><a class="menu__link" href="https://stackoverflow.com/users/1885757/sneawo">STACK OVERFLOW</a></li>
+		
+			<li class="menu__item "><a class="menu__link" href="https://linkedin.com/in/sneawo">LINKEDIN</a></li>
+		
+			<li class="menu__item "><a class="menu__link" href="https://www.odesk.com/users/~0180254a2eef2ffd28">UPWORK</a></li>
+		
+			<li class="menu__item "><a class="menu__link" href="https://github.com/sneawo">GITHUB</a></li>
+		
+		
+		<li style="float: right;"><a class="menu__link" href="http://feeds.feedburner.com/sneawo-tech-blog" target="_blank">RSS</a></li>
+	</ul>
+</nav>
+				</div>
+			</header>
+		<div class="mr-wrapper clearfix">
+
+
+<div class="main-content mr-content" role="main" itemprop="mainContentOfPage">
+	<article class="post">
+		<header class="entry-header clearfix">
+			<h1 class="entry-title">How to install pillow, psycopg, pylibmc packages in python:alpine image</h1>
+			<p class="mr-meta entry-meta">
+				<svg class="icon icon-time" height="14" viewBox="0 0 16 16" width="14" xmlns="http://www.w3.org/2000/svg"><path d="m8-.0000003c-4.4 0-8 3.6-8 8 0 4.4000003 3.6 8.0000003 8 8.0000003 4.4 0 8-3.6 8-8.0000003 0-4.4-3.6-8-8-8zm0 14.4000003c-3.52 0-6.4-2.88-6.4-6.4000003 0-3.52 2.88-6.4 6.4-6.4 3.52 0 6.4 2.88 6.4 6.4 0 3.5200003-2.88 6.4000003-6.4 6.4000003zm.4-10.4000003h-1.2v4.8l4.16 2.5600003.64-1.04-3.6-2.1600003z"/></svg>
+				<time class="entry-meta-date updated" datetime="2017-09-07 13:30:00 &#43;0000 UTC">September 07, 2017</time>
+				<span class="entry-meta-categories">
+<svg class="icon icon-category" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="m7 2l1 2h8v11h-16v-13z"/></svg>
+<a class="meta-categories" href="https://blog.sneawo.com/categories/python" rel="category">python</a>, <a class="meta-categories" href="https://blog.sneawo.com/categories/docker" rel="category">docker</a>, <a class="meta-categories" href="https://blog.sneawo.com/categories/alpine" rel="category">alpine</a></span>
+			</p>
+		</header>
+		<div class="entry-content clearfix">
+			
+			
+
+<p>Here is the examples how to install some packages in <a href="https://hub.docker.com/_/python/">python:alpine</a> image. Some dependencies should be installed permanently and some only for package build and removed after.</p>
+
+<h4 id="pillow">pillow</h4>
+
+<pre><code>RUN apk add --no-cache jpeg-dev zlib-dev
+</code></pre>
+
+<h4 id="psycopg">psycopg</h4>
+
+<pre><code>RUN apk add --no-cache postgresql-dev
+</code></pre>
+
+<h4 id="pylibmc">pylibmc</h4>
+
+<pre><code>RUN apk add --no-cache libmemcached-dev zlib-dev 
+</code></pre>
+
+<p>Then to install:</p>
+
+<pre><code> RUN apk add --no-cache --virtual .build-deps build-base linux-headers \     
+    &amp;&amp; pip3 install pip --upgrade \     
+    &amp;&amp; pip3 install &lt;packages list&gt; \     
+    &amp;&amp; apk del .build-deps
+</code></pre>
+
+		</div>
+		
+	</article>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<ins class="adsbygoogle"
+	     style="display:block; text-align:center;"
+	     data-ad-layout="in-article"
+	     data-ad-format="fluid"
+	     data-ad-client="ca-pub-1496352595221803"
+	     data-ad-slot="2309262909"></ins>
+	<script>
+	     (adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+	
+	
+	
+<div id="mr-comments" class="mr-comments-wrap">
+	<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "sneawoblog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+</div>
+
+<aside class="mr-sidebar" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">
+	
+<div class="mr-widget widget_search">
+	<form class="search-form" role="search" method="get" action="//google.com/search">
+		<label>
+			<span class="screen-reader-text">Search for:</span>
+			<input type="search" class="search-field" placeholder="SEARCH..." value="" name="q">
+		</label>
+		<input class="search-submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="https://blog.sneawo.com/" />
+	</form>
+</div>
+
+	<link href="//cdn-images.mailchimp.com/embedcode/classic-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup .subscribe-button {
+		margin: 0;
+	}
+	#mc_embed_signup .mc-field-group {
+		min-height: inherit;
+	}
+	#mc_embed_signup #mc-embedded-subscribe-form div.mce_inline_error {
+		margin: 0;
+	}
+	#mc_embed_signup form {
+		padding: 0;
+	}
+	#mc_embed_signup div.response {
+		margin: 0 0 1em 0;
+	}
+</style>
+<div id="mc_embed_signup" class="mr-widget">
+<form action="https://sneawo.us17.list-manage.com/subscribe/post?u=7b377720f3846f1417989bd20&amp;id=ba828d5a3f" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+    	<h4 class="mr-widget-title"><span class="mr-widget-title-inner">Subscribe to updates</span></h4>
+<div class="mc-field-group">
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL" placeholder="Email Address">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_7b377720f3846f1417989bd20_ba828d5a3f" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="subscribe-button"></div>
+    </div>
+</form>
+</div>
+<script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='BIRTHDAY';ftypes[3]='birthday';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+	
+<div class="mr-widget widget_recent_entries">
+	<h4 class="mr-widget-title"><span class="mr-widget-title-inner">Recent Posts</span></h4>
+	<ul>
+		
+		<li><a href="https://blog.sneawo.com/blog/2019/12/13/a-better-celery-ping-for-docker-healthcheck/">A better Celery ping for Docker healthcheck</a></li>
+		
+		<li><a href="https://blog.sneawo.com/post/">Posts</a></li>
+		
+		<li><a href="https://blog.sneawo.com/blog/2019/08/15/asyncio-rest-example-with-aiohttp-motor-and-umongo/">AsyncIO REST example with aiohttp, motor and umongo</a></li>
+		
+		<li><a href="https://blog.sneawo.com/blog/2019/05/22/mock-aiohttp-request-in-unittests/">Mock aiohttp request in unittests</a></li>
+		
+		<li><a href="https://blog.sneawo.com/blog/2019/04/30/a-script-to-wait-for-a-service-running-in-docker-swarm/">A script to wait for a service running in docker swarm</a></li>
+		
+	</ul>
+</div>
+
+
+	<div class="mr-widget">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1496352595221803"
+     data-ad-slot="6723781526"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+	
+
+
+<div class="mr-widget widget_categories">
+	<h4 class="mr-widget-title"><span class="mr-widget-title-inner">Categories</span></h4>
+	<ul>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/aiohttp">Aiohttp</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/alfred">Alfred</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/alfred-workflow">Alfred-Workflow</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/alpine">Alpine</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/angular">Angular</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/applescript">Applescript</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/architecture">Architecture</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/async">Async</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/asyncio">Asyncio</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/auth0">Auth0</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/azure">Azure</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/azure-storage">Azure-Storage</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/blog">Blog</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/celery">Celery</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/certificate">Certificate</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/ci">Ci</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/conference">Conference</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/django">Django</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/docker">Docker</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/electron">Electron</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/europython">Europython</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/flask">Flask</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/flask-security">Flask-Security</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/gitlab">Gitlab</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/google-app-engine">Google-App-Engine</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/health">Health</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/hugo">Hugo</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/javascript">Javascript</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/jupyter">Jupyter</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/links">Links</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/logs">Logs</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/macos">Macos</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mail">Mail</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/makefile">Makefile</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/microservices">Microservices</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/microsoft-graph">Microsoft-Graph</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mongo">Mongo</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mongodb">Mongodb</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mongodb-aggregation">Mongodb-Aggregation</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mongoengine">Mongoengine</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/mysql">Mysql</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/nginx">Nginx</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/nodejs">Nodejs</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/oauth">Oauth</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/optimization">Optimization</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/plotly">Plotly</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/postgresql">Postgresql</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/python">Python</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/real-time">Real-Time</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/redis">Redis</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/rest">Rest</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/socketio">Socketio</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/stackoverflow">Stackoverflow</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/sublime-text">Sublime-Text</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/swarm">Swarm</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/tests">Tests</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/tools">Tools</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/twitter-bootstrap">Twitter-Bootstrap</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/ubuntu">Ubuntu</a></li>
+		
+		<li class="cat-item"><a href="https://blog.sneawo.com/categories/vue.js">Vue.js</a></li>
+		
+	</ul>
+</div>
+
+
+
+	
+
+
+
+
+</aside>
+	</div>
+		<div class="mr-copyright-wrap">
+			<div class="mr-container mr-container-inner clearfix">
+				<p class="mr-copyright">&copy; 2019 Andrey Zhukov&#39;s Tech Blog.</p>
+			</div>
+		</div>
+	</div>
+
+<script>
+	var navigation = responsiveNav(".menu", {
+		navClass: "menu--collapse",
+	});
+</script>
+<script type="text/javascript">
+    var disqus_shortname = 'sneawoblog';      
+    var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'https://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-37441782-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+</body>
+</html>

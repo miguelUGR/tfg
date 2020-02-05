@@ -3,9 +3,9 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    <h1 class="h3 mb-0 text-gray-800">Obsertatorios</h1>
     <form method="POST"  action="{% url 'crear_observacion' %}">{% csrf_token %}
-      <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Añadir Observacion</button>
+      <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Añadir Observatorio</button>
     </form> 
 </div>
 {% endblock %}
@@ -21,7 +21,7 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observaciones</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observatorios</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -29,55 +29,51 @@
                   <thead>
                     <tr>
                       <th>Nombre</th>
-                      <th>Fecha Observacion</th>
+                      <th>Camara</th>
                       <th>Usuario</th>
-                      <th>Edicion</th>
+                      <th>Edicion</th>                    
                       <th>Borrado</th>
-                      
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>Nombre</th>
-                      <th>Fecha Observacion</th>
+                      <th>Camara</th>
                       <th>Usuario</th>
                       <th>Edicion</th>
                       <th>Borrado</th>
-
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if observacion %}
-                        {% for i in observacion %}
+                    {% if observatorio %}
+                        {% for i in observatorio %}
                         <tr>
                         <td>{{i.nombre}}</td>
-                        <td>{{i.fecha_observacion}}</td>
+                        <td>{{i.camara}}</td>
                         <td>{{i.user}}</td>
                         
                         <td>
-                            <form method="POST"  action="{% url 'editar_observacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'editar_observatorio' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
                                     <span class="text">Editar</span>
                                     
-                                </button>
-                                    
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                                </button> 
+                                <input type="hidden" name="observatorio" value="{{i.nombre}}">
                             </form> 
                         </td>
                         <td>
-                            <form method="POST"  action="{% url 'borrar_observacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'borrar_observatorio' %}">{% csrf_token %}
                                 <button   class="btn btn-danger btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
                                     <span class="text">Borrar</span>
                                     
-                                </button>
-                                    
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                                </button>  
+                                <input type="hidden" name="observatorio" value="{{i.nombre}}">
                             </form>
                         </td>
                                 
