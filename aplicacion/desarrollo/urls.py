@@ -22,6 +22,9 @@ urlpatterns = [
     path('modificar_observatorio',views.modificar_observatorio,name='modificar_observatorio'),
     path('borrar_observatorio',views.borrar_observatorio,name='borrar_observatorio'),
     path('borrar_confirmado_observatorio',views.borrar_confirmado_observatorio,name='borrar_confirmado_observatorio'),
+    path('crear_observatorio',views.crear_observatorio,name='crear_observatorio'),
+
+    path('inscripcion',views.inscripciones,name='inscripcion'),
 
 ] 
 

@@ -91,7 +91,7 @@ ACCOUNT_FORMS ={ 'signup':'desarrollo.forms.MiSignupForm',} #para que coja la cl
 # LOGIN_URL = '/account/login/'
 #-------------------------------------------------------------
 
-#----cosas para la imagen (ImageField)------------------------
+#----Carpeta para la imagen (ImageField)------------------------
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #-------------------------------------------------------------

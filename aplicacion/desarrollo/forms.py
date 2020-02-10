@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import Usuario, Observatorio, Observacion
+from .models import Usuario, Observatorio, Observacion, Inscripciones
 from allauth.account.forms import SignupForm
 
 # class UserForm(forms.ModelForm):
@@ -47,4 +47,9 @@ class ObservacionForm(forms.ModelForm):
 class ObservatorioForm(forms.ModelForm):
     class Meta:
         model = Observatorio
-        fields = ('nombre','camara','apertura','filtros','latitude','longitude','distanciaFocal','user',) 
+        fields = ('nombre','camara','apertura','filtros','latitude','longitude','distanciaFocal',) 
+
+class InscripcionesForm(forms.ModelForm):
+    class Meta:
+        model = Inscripciones
+        fields = ('observaciones','observatorios',)

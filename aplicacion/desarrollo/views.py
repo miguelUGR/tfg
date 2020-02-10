@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django import forms 
 from django.http import HttpResponseRedirect, HttpResponse ,JsonResponse
-from .models import Observacion, Observatorio
-from .forms import ObservacionForm, ObservatorioForm
+from .models import Observacion, Observatorio, Inscripciones
+from .forms import ObservacionForm, ObservatorioForm, InscripcionesForm
 from django.shortcuts import redirect #para redireccionar
 # Create your views here.
 def hola(request , nombre): #tiene dos parameteos el request para coger datos y el nombre que le pasamos <>
@@ -20,10 +20,9 @@ def base(request):
         global user,usuario_registrado
         user = request.user # PARA el template indice.html que permanezca el usuario registrado
         usuario_registrado=user.id # Para view.py y poder hacer filtrado de objetos del propio usuario
-
-    # for i in user:
-    #     print (i)
-    
+    # for i in request.user: 
+    #     print(i)
+    print(request.user.image)
     return render (request,"index.html",{'name_user': user})
 
 def observaciones(request):
@@ -43,6 +42,23 @@ def observatorios(request):
     observatorios=Observatorio.objects.all().filter(user = usuario_registrado)
     # observatorios=ObservatorioForm.objects.all().filter(user= usuario_registrado)
     return render (request,"observatorios.html",{'name_user': user,'observatorio':observatorios})
+
+def inscripciones(request):
+    OBSERVATORIOS=Observatorio.objects.all().filter(user = usuario_registrado)
+    
+    # print ('------hola-----')
+    inscripciones = [] 
+    for i in OBSERVATORIOS:
+        print(i)
+        inscripcion=Inscripciones.objects.get(observatorios = i)
+        if not inscripcion:
+            print("Inscripcion_vacia")
+            inscripciones = None
+        else:
+            inscripciones.append(inscripcion)
+    
+    # inscripciones = Inscripciones.objects.all()
+    return render(request,"inscripciones.html",{'name_user': user,'inscripcion':inscripciones})
    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -110,6 +126,24 @@ def crear_observaciones(request):
         print ('hola2')
     return render(request,'observaciones_register.html',{'name_user': user,'form':form})
 
+def crear_observatorio(request):
+    print('------HOLA1-----')
+    if request.method == 'POST':
+        form = ObservatorioForm(request.POST)
+        if form.is_valid():
+            observatorio = form.save(commit=False) # lo que hago con estros tres pasos es decirle que me guarde el usuario logeado
+            observatorio.user= user
+            observatorio.save()
+            return redirect(observatorios)
+        # else:
+        #     form = ObservatorioForm(initial={'user':usuario_registrado})
+        
+        
+    else:   #aqui nunca va, pero cuando da fallos a la hora de programar indico que me mande formulario con usuario=logeado por defecto
+        
+        form = ObservatorioForm(initial={'user':usuario_registrado})
+        
+    return render(request,'observatorios_register.html',{'name_user': user,'form':form})
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

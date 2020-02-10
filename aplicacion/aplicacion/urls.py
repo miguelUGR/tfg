@@ -22,6 +22,7 @@ from django.contrib import admin
 
 #cosas para la imagen (ImageField)
 from django.conf import settings
+from django.conf.urls.static import static # para + static de visualizar MEDIA_URL
 from django.views.static import serve
 #------
 
@@ -32,7 +33,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),  #p6
     path('desarrollo/', include('desarrollo.urls')), #quito el / pk se lo añado en desarollo/urls.py
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # esta linea es para que pueda poner la ruta completa de las imagenes en el navegador :http://127.0.0.1:8000/media/usuarios/name_image.jpg
 
 #cosas para la imagen (ImageField)
 if settings.DEBUG:
