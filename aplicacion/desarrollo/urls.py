@@ -25,6 +25,9 @@ urlpatterns = [
     path('crear_observatorio',views.crear_observatorio,name='crear_observatorio'),
 
     path('inscripcion',views.inscripciones,name='inscripcion'),
+    path('borrar_inscripcion',views.borrar_inscripciones,name='borrar_inscripcion'),
+    path('borrar_confirmado_inscripcion',views.borrar_confirmado_inscripcion,name='borrar_confirmado_inscripcion'),
+    path('crear_inscripcion',views.crear_inscripcion,name='crear_inscripcion'),
 
 ] 
 

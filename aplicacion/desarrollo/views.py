@@ -45,19 +45,16 @@ def observatorios(request):
 
 def inscripciones(request):
     OBSERVATORIOS=Observatorio.objects.all().filter(user = usuario_registrado)
-    
-    # print ('------hola-----')
+
     inscripciones = [] 
     for i in OBSERVATORIOS:
         print(i)
-        inscripcion=Inscripciones.objects.get(observatorios = i)
-        if not inscripcion:
-            print("Inscripcion_vacia")
-            inscripciones = None
-        else:
+        if  Inscripciones.objects.filter(observatorios = i).exists():
+            inscripcion=Inscripciones.objects.get(observatorios = i)
             inscripciones.append(inscripcion)
+        else:
+            pass
     
-    # inscripciones = Inscripciones.objects.all()
     return render(request,"inscripciones.html",{'name_user': user,'inscripcion':inscripciones})
    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -127,7 +124,7 @@ def crear_observaciones(request):
     return render(request,'observaciones_register.html',{'name_user': user,'form':form})
 
 def crear_observatorio(request):
-    print('------HOLA1-----')
+    
     if request.method == 'POST':
         form = ObservatorioForm(request.POST)
         if form.is_valid():
@@ -145,8 +142,33 @@ def crear_observatorio(request):
         
     return render(request,'observatorios_register.html',{'name_user': user,'form':form})
 
-#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def crear_inscripcion(request):
+    print('------HOLA1-----')
+    if request.method == 'POST':
+        form = InscripcionesForm(request.POST)
+        if form.is_valid():
+            inscripcion = form.save()
+            return redirect(inscripciones)
+    else:
+        form = InscripcionesForm()
+    
+    return render(request,'inscripciones_register.html',{'name_user': user,'form':form})
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# def inscripciones(request):
+#     OBSERVATORIOS=Observatorio.objects.all().filter(user = usuario_registrado)
+
+#     inscripciones = [] 
+#     for i in OBSERVATORIOS:
+#         print(i)
+#         if  Inscripciones.objects.filter(observatorios = i).exists():
+#             inscripcion=Inscripciones.objects.get(observatorios = i)
+#             inscripciones.append(inscripcion)
+#         else:
+#             pass
+    
+#     return render(request,"inscripciones.html",{'name_user': user,'inscripcion':inscripciones})
+   
 
 def borrar_observaciones(request):
     data = request.POST.copy()
@@ -169,6 +191,17 @@ def borrar_confirmado_observatorio(request):
         observatorio=Observatorio.objects.get(nombre=request.session['observatorio_borrar'])
         observatorio.delete()
         return redirect(observatorios)
+
+def borrar_inscripciones(request):
+    data = request.POST.copy()
+    request.session['inscripcion_borrar']= data['inscripcion']
+    return render(request,'inscripciones_borrado.html',{'name_user':user})
+
+def borrar_confirmado_inscripcion(request):
+    if request.session['inscripcion_borrar']:
+        inscripcion = Inscripciones.objects.get(nombre=request.session['inscripcion_borrar'])
+        inscripcion.delete()
+        return redirect(inscripciones)
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 

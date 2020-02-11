@@ -26,7 +26,7 @@ class Usuario(AbstractUser):
     (AFICIONADO , "Aficionado"))
     tipoUsuario= models.CharField(max_length = 9, choices = TIPO_USUARIO, default=AFICIONADO )
     image = models.ImageField(upload_to='usuarios/',default='usuarios/default_image.png', height_field=None, width_field=None, max_length=100)# me pide que haga pip install Pillow
-   
+    solicitudAstro = models.BooleanField(verbose_name=('Solicitud Usuario Astrofisico '),default=False)
     def __str__(self):
          return self.username #Esto es para que apareciese en el navegador (lugar Admin de django), el nombre de los platos , en vez de objeto1,2...s
 
@@ -54,7 +54,6 @@ class Observacion(models.Model):
     hora_inicio = models.DateTimeField(null=True, blank=True) #indico que puedes meter nulo 
     hora_final = models.DateTimeField(null=True, blank=True)
     descripcion = models.TextField()
-    # image = models.ImageField(upload_to='observacion/%Y/%m/%D/', height_field=None, width_field=None, max_length=100,blank=True,null=True)# me pide que haga pip install Pillow
     image = models.ImageField(upload_to='observacion/%Y/%m/%D/', height_field=None, width_field=None, max_length=100,blank=True,null=True)# me pide que haga pip install Pillow
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.PROTECT)
     def __str__(self):

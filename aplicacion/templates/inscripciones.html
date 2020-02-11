@@ -4,7 +4,7 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Inscripciones</h1>
-    <form method="POST"  action="{% url 'crear_observacion' %}">{% csrf_token %}
+    <form method="POST"  action="{% url 'crear_inscripcion' %}">{% csrf_token %}
       <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Añadir Inscripcion</button>
     </form> 
 </div>
@@ -21,7 +21,7 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabla de Inscripciones</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Tabla de Inscripciones Propias</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -71,7 +71,7 @@
                             </form> 
                         </td>
                         <td>
-                            <form method="POST"  action="{% url 'borrar_observacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'borrar_inscripcion' %}">{% csrf_token %}
                                 <button   class="btn btn-danger btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
@@ -80,7 +80,7 @@
                                     
                                 </button>
                                     
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                                <input type="hidden" name="inscripcion" value="{{i.nombre}}">
                             </form>
                         </td>
                                 
