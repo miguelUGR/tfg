@@ -36,10 +36,15 @@ urlpatterns = [
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # esta linea es para que pueda poner la ruta completa de las imagenes en el navegador :http://127.0.0.1:8000/media/usuarios/name_image.jpg
 
 #cosas para la imagen (ImageField)
+
 if settings.DEBUG:
     urlpatterns += [
         url(r'^media/(?P<path>.*)$',serve, {
             'document_root' : settings.MEDIA_ROOT,
         }),
     ]
+# OTRA MANERA DE HACER LO MISMO QUE ARRIBA
+# if settings.DEBUG: 
+#         urlpatterns += static(settings.MEDIA_URL, 
+#                               document_root=settings.MEDIA_ROOT) 
 

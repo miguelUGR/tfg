@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django import forms 
 from django.http import HttpResponseRedirect, HttpResponse ,JsonResponse
-from .models import Observacion, Observatorio, Inscripciones
-from .forms import ObservacionForm, ObservatorioForm, InscripcionesForm
+from .models import Observacion, Observatorio, Inscripciones, Usuario
+from .forms import ObservacionForm, ObservatorioForm, InscripcionesForm, UsuarioChangeForm
+from django.contrib import messages 
 from django.shortcuts import redirect #para redireccionar
 # Create your views here.
 def hola(request , nombre): #tiene dos parameteos el request para coger datos y el nombre que le pasamos <>
@@ -73,7 +74,17 @@ def edit_observatorios(request):
     # print('----HOLA----')
     observatorio= Observatorio.objects.get(nombre = request.session['observatorio_viejo'])
     form = ObservatorioForm(instance = observatorio )
-    return render(request, 'observatorios_edit.html',{'name_user':user,'form':form,'nom_observatorio':request.session['observatorio_viejo']} )
+    return render(request, 'observatorios_edit.html',{'name_user':user,'form':form} )
+
+def edit_user(request):
+    print ("----hola----")
+    # user=Usuario.objects.get(user = usuario_registrado) # PONIENDO USER, me da error y me da todos los id que tiene user en la consola [[ email, emailaddress, first_name, groups, id, image, is_active, is_staff, is_superuser, last_login, last_name, logentry, observacion, observatorio, password, socialaccount, solicitudAstro, tipoUsuario, user_permissions, username ]]
+    user=Usuario.objects.get(id = usuario_registrado)
+    # print (user) # user no es iterable
+    form =UsuarioChangeForm (instance = user)
+
+    return render(request,'usuarios_edit.html',{'name_user':user,'form':form})
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -82,7 +93,7 @@ def modificar_observacion(request):
     data = request.POST.copy() #cogo todo lo que me viene
     if request.method == "POST":
         observacion_vieja = Observacion.objects.get(nombre=data['observacion_vieja']) #cojo el plato con el nombre digamos viejo, para que cuando le demos a guardar, GUARDE TODO LO RECIBIDO EN EL PLATO DIGAMOS YA EXISTENTE, pk imagina que cambiamos el nombre, pues para que no te cree uno nuevo,O QUE AL CAMBIAR EL NOMBRE, EN OTRO CAMPO ME HE EQUIVOCADO y repito, entonces debo tener el nombre viejo, pk aun no he modificado nada
-        form = ObservacionForm(request.POST, instance=observacion_vieja) #Indicamos que el formulario que ha creado , tenga los datos que hemos rellenado y lo subcriba  en la instancia que le pasamos
+        form = ObservacionForm(request.POST, request.FILES, instance=observacion_vieja) #Indicamos que el formulario que ha creado , tenga los datos que hemos rellenado y lo subcriba  en la instancia que le pasamos
         if form.is_valid():#aqui comprovamos que todo  son datos validados correctamente y lo guardamos
             form.save()  
             return redirect(observaciones)
@@ -90,7 +101,7 @@ def modificar_observacion(request):
     
 def modificar_observatorio(request):
     if request.session['observatorio_viejo']: #ME AHORRO el hacer observatorio_viejo etc como en observaciones
-        data = request.POST.copy() #cogo todo lo que me viene
+        # data = request.POST.copy() #cogo todo lo que me viene
         if request.method == "POST":
             observatorio_viejo=Observatorio.objects.get(nombre=request.session['observatorio_viejo'])
             form = ObservatorioForm(request.POST, instance=observatorio_viejo )
@@ -99,7 +110,14 @@ def modificar_observatorio(request):
                 return redirect(observatorios)
             return render(request,'observatorios_edit.html',{'name_user':user,'form':form})
 
-
+def modificar_user(request):
+    if request.method == "POST":
+        user_viejo=Usuario.objects.get(id = usuario_registrado)
+        form = UsuarioChangeForm(request.POST, request.FILES, instance=user_viejo) #importante request.FILES y poner el enctype <form enctype="multipart/form-data">
+        if form.is_valid():
+            form.save()
+            return redirect(base)
+        return render(request,'usuario_edit.html',{'name_user':user,'form':form})
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -114,10 +132,14 @@ def crear_observaciones(request):
         form = ObservacionForm(request.POST)
         if form.is_valid():
             print ('hola4')
-            observacion = form.save()#coge todo lo del formulario y lo guarda. El nombre he puesto plato, pero puedo poner lo que quiera, ya que el form.save esta referenciado al formulario de PlatoForm
+            observacion = form.save(commit=False)# lo que hago con estros tres pasos es decirle que me guarde el usuario logeado 
+            observacion.user = user
+            observacion.save()
             return redirect(observaciones)
-        # else:
-        #     return redirect(observaciones)
+        else:
+            print ('hola5')
+            err=form.errors
+            return render(request,'observaciones_register.html',{'name_user': user,'form':form,'errors':err})
     else:
         form = ObservacionForm()
         print ('hola2')
@@ -143,7 +165,7 @@ def crear_observatorio(request):
     return render(request,'observatorios_register.html',{'name_user': user,'form':form})
 
 def crear_inscripcion(request):
-    print('------HOLA1-----')
+    # print('------HOLA1-----')
     if request.method == 'POST':
         form = InscripcionesForm(request.POST)
         if form.is_valid():

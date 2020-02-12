@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 
+
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -20,9 +21,23 @@
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Añadir Observaciones</h6>
+              {% if form.errors %}
+                <!-- Error messaging -->
+                <div >
+                  <div>
+                    <p>Hay algunos errores de informacion. corrija los siguientes errores</p>
+                    <ul>
+                      {% for field in form %}
+                        {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+                <!-- /Error messaging -->
+              {% endif %}
             </div>
             <div class="card-body">
-              <form method="POST"  >{% csrf_token %}
+              <form method="POST"  enctype='multipart/form-data'> </form>>{% csrf_token %}
                 {{ form.as_p}}
                 <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
             </form>

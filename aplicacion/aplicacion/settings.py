@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # new p6s
 
     'desarrollo', #nuevo
-    'django_cleanup.apps.CleanupConfig' # PARA ELIMINACION AUTOMATICA imagen de Observaciones
+    'django_cleanup.apps.CleanupConfig' # PARA ELIMINACION AUTOMATICA imagen de Observaciones,
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
 AUTH_USER_MODEL = 'desarrollo.Usuario' #Esto es para poder coger el modelo usuario creado a partir del propio de django
@@ -86,7 +86,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_REDIRECT_URL = "base" # esto es en caso de que haga el login correctamente te manda donde digas
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #para que no pete cuando metes un correo, pk ten manda un correo de autentificacion en modo pro cuando metes un correo
 
-ACCOUNT_EMAIL_REQUIRED = True #para que cuando me registre no sea opcional
+ACCOUNT_EMAIL_REQUIRED = True #para que cuando me registre no sea opcional el correo
 ACCOUNT_FORMS ={ 'signup':'desarrollo.forms.MiSignupForm',} #para que coja la clase y añada los campos que queremos para registrarse desde la web
 # LOGIN_URL = '/account/login/'
 #-------------------------------------------------------------

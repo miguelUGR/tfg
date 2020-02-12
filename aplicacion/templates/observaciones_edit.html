@@ -23,7 +23,7 @@
               <h6 class="m-0 font-weight-bold text-primary">Edicion Observaciones</h6>
             </div>
             <div class="card-body">
-              <form method="POST"  action="{% url 'modificar_observacion' %}">{% csrf_token %}
+              <form method="POST" enctype="multipart/form-data" action="{% url 'modificar_observacion' %}">{% csrf_token %}
                 {{ form.as_p}}
                 <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
                 <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
