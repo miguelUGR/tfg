@@ -5,10 +5,8 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Añadir Observacion</a>
 </div>
 {% endblock %}
-
 
 
 {% block listado %}
@@ -19,6 +17,9 @@
           <h1 class="h3 mb-2 text-gray-800">Añadir</h1>
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Añadir Observaciones</h6>
+            </div>
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Añadir Observaciones</h6>
               {% if form.errors %}
@@ -37,8 +38,14 @@
               {% endif %}
             </div>
             <div class="card-body">
-              <form method="POST"  enctype='multipart/form-data'> </form>>{% csrf_token %}
+              <form method="POST" enctype='multipart/form-data'  >{% csrf_token %}
                 {{ form.as_p}}
+                <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-info-circle"></i>
+                  </span>
+                  <span class="text">Volver Atras</span>
+                </a>
                 <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
             </form>
             </div>

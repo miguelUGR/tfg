@@ -12,7 +12,8 @@ def hola(request , nombre): #tiene dos parameteos el request para coger datos y 
 def iniciar(request):
     # return render (request,"login.html")
     return HttpResponseRedirect("/accounts/login/")
-    
+
+
 def base(request):
     # form = PostForm()
     # return render (request,"inicio.html",{'form': form})
@@ -24,7 +25,7 @@ def base(request):
     # for i in request.user: 
     #     print(i)
     print(request.user.image)
-    return render (request,"index.html",{'name_user': user})
+    return render (request,"index.html")
 
 def observaciones(request):
 
@@ -32,7 +33,7 @@ def observaciones(request):
     # observaciones= observaciones.filter(user_id = usuario_registrado)
 
     # ----las dos lineas anteriores hacen lo mismo que la siguiente ----
-    observaciones=Observacion.objects.all().filter(user= usuario_registrado)
+    observaciones=Observacion.objects.all().filter(user= request.user.id)
     # print (user.id)
     # for i in observaciones:
     #     print(i.user)
@@ -79,9 +80,9 @@ def edit_observatorios(request):
 def edit_user(request):
     print ("----hola----")
     # user=Usuario.objects.get(user = usuario_registrado) # PONIENDO USER, me da error y me da todos los id que tiene user en la consola [[ email, emailaddress, first_name, groups, id, image, is_active, is_staff, is_superuser, last_login, last_name, logentry, observacion, observatorio, password, socialaccount, solicitudAstro, tipoUsuario, user_permissions, username ]]
-    user=Usuario.objects.get(id = usuario_registrado)
+    # user=Usuario.objects.get(id = usuario_registrado)
     # print (user) # user no es iterable
-    form =UsuarioChangeForm (instance = user)
+    form =UsuarioChangeForm (instance = request.user)
 
     return render(request,'usuarios_edit.html',{'name_user':user,'form':form})
 
@@ -172,7 +173,9 @@ def crear_inscripcion(request):
             inscripcion = form.save()
             return redirect(inscripciones)
     else:
+        print("lalalal")
         form = InscripcionesForm()
+        form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
     
     return render(request,'inscripciones_register.html',{'name_user': user,'form':form})
 

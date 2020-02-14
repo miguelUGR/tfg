@@ -17,7 +17,7 @@ class UsuarioCreationForm(UserCreationForm):
         fields = ('tipoUsuario','solicitudAstro', )
 
 
-class UsuarioChangeForm(UserChangeForm):
+class UsuarioChangeForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
@@ -35,11 +35,22 @@ class MiSignupForm(SignupForm):
     #LO QUE EH ECHO, es no me muestre la opcion de elegir usuario y por defecto ponga AFICIONADO
     # tipoUsuario= forms.MultipleChoiceField(widget=forms.Select, choices = TIPO_USUARIO )# idicio que sea forms.Select, en vez de forms.CheckboxSelectMultiple
     solicitudAstro = forms.BooleanField(widget=forms.CheckboxInput,required=False) # el require es para que si no marcas nada acepte false, si pongo a true se marca
-    def signup(self, request, user): #para que lo cree y lo guarde 
-        user.tipoUsuario = self.cleaned_data['tipoUsuario']
+    
+    def save(self,request):
+        print('-----signup------')
+        user= super(MiSignupForm,self).save(request)
+        print(self.cleaned_data['solicitudAstro'])
         user.solicitudAstro = self.cleaned_data['solicitudAstro']
         user.save()
         return user
+    
+    
+    # def signup(self, request, user): #para que lo cree y lo guarde 
+    #     print('-----signup------')
+    #     user.tipoUsuario = self.cleaned_data['tipoUsuario']
+    #     user.solicitudAstro = self.cleaned_data['solicitudAstro']
+    #     user.save()
+    #     return user
 
 class ObservacionForm(forms.ModelForm):
     class Meta:

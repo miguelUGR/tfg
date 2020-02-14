@@ -68,11 +68,11 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Edición:</h6>
-            {% if name_user.tipoUsuario == "AT" %}
+            {% if user.tipoUsuario == "AT" %}
             <a class="collapse-item" href="{% url 'observacion' %}">Observaciones</a>
             {% endif %}
             
-            {% if name_user.tipoUsuario == "AF" %}
+            {% if user.tipoUsuario == "AF" %}
             <a class="collapse-item" href="{% url 'observatorio' %}">Observatorios</a>
             <a class="collapse-item" href="{% url 'inscripcion' %}">Inscripciones</a>
             {% endif %}
@@ -310,8 +310,8 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ name_user.username }}</span>
-                <img class="img-profile rounded-circle" src="/media/{{ name_user.image }}">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.username }}</span>
+                <img class="img-profile rounded-circle" src="/media/{{ user.image }}">
                 
               </a>
               <!-- Dropdown - User Information -->
