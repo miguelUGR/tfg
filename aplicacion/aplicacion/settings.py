@@ -88,7 +88,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #para que no pe
 
 ACCOUNT_EMAIL_REQUIRED = True #para que cuando me registre no sea opcional el correo
 ACCOUNT_FORMS ={ 'signup':'desarrollo.forms.MiSignupForm',} #para que coja la clase y añada los campos que queremos para registrarse desde la web
-LOGIN_URL = '/account/login/'
+# LOGIN_URL = '/account/login/'
 #-------------------------------------------------------------
 
 #----Carpeta para la imagen (ImageField)------------------------
