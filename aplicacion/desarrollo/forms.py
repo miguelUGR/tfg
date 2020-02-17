@@ -10,6 +10,8 @@ from allauth.account.forms import SignupForm
 
 #Las dos sigueintes clases, son para que me muestre en el navegador parte /admin, que cuando quiera un nuevo usuario 
 # este incluido lo que yo quiera, en este caso tipoUsuario(quen pondre por defecto aficionado y una opcion de que quiero o no ser astrofisico)
+
+
 class UsuarioCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
@@ -21,7 +23,7 @@ class UsuarioChangeForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name','last_name','solicitudAstro','image','password')
+        fields = ('first_name','last_name','solicitudAstro','image',)
 
 class MiSignupForm(SignupForm):
     # Aqui lo que hago es para que me lo muestre a la hora de registrar nuevo usuario en la aplicacion
@@ -65,4 +67,4 @@ class ObservatorioForm(forms.ModelForm):
 class InscripcionesForm(forms.ModelForm):
     class Meta:
         model = Inscripciones
-        fields = ('nombre','observaciones','observatorios',)
+        fields = ('id_inscripcion','nombre','observaciones','observatorios','descripcion','image','opcionInscripcion',)

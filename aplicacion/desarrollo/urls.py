@@ -31,7 +31,9 @@ urlpatterns = [
 
 
     path('editar_usuario',views.edit_user,name='editar_usuario'),
-    path('modificar_usuario',views.modificar_user,name='modificar_usuario')
+    path('modificar_usuario',views.modificar_user,name='modificar_usuario'),
+
+    path('edit_passwd',views.edit_passwd,name='edit_passwd'),
 
 ] 
 

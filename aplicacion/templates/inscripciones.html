@@ -4,9 +4,9 @@
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Inscripciones</h1>
-    <a href="{% url 'crear_inscripcion' %}" class="btn btn-info btn-icon-split">
+    <a href="{% url 'crear_inscripcion' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
       <span class="icon text-white-50">
-        <i class="fas fa-info-circle"></i>
+        <i class="fas fa-download fa-sm text-white-50"></i>
       </span>
       <span class="text">Añadir Inscripcion</span>
     </a>
@@ -32,22 +32,19 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
+                      <th>Id</th>
                       <th>Nombre</th>
                       <th>Observacion</th>
-                      <th>Observatorio</th>
-                      <th>Usuario</th>
-                      <th>Edicion</th>
+                      <th>Observatorio</th>  
                       <th>Borrado</th>
-                      
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
+                      <th>Id</th>
                       <th>Nombre</th>
                       <th>Observacion</th>
-                      <th>Observatorio</th>
-                      <th>Usuario</th>
-                      <th>Edicion</th>
+                      <th>Observatorio</th>       
                       <th>Borrado</th>
 
                     </tr>
@@ -56,24 +53,11 @@
                     {% if inscripcion %}
                         {% for i in inscripcion %}
                         <tr>
+                        <td>{{i.id_inscripcion}}</td>
                         <td>{{i.nombre}}</td>
                         <td>{{i.observaciones}}</td>
                         <td>{{i.observatorios}}</td>
-                        <td></td>
-                        
-                        <td>
-                            <form method="POST"  action="{% url 'editar_observacion' %}">{% csrf_token %}
-                                <button   class="btn btn-success btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-check"></i>
-                                    </span>
-                                    <span class="text">Editar</span>
-                                    
-                                </button>
-                                    
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
-                            </form> 
-                        </td>
+            
                         <td>
                             <form method="POST"  action="{% url 'borrar_inscripcion' %}">{% csrf_token %}
                                 <button   class="btn btn-danger btn-icon-split">
@@ -86,11 +70,8 @@
                                     
                                 <input type="hidden" name="inscripcion" value="{{i.nombre}}">
                             </form>
-                        </td>
-                                
+                        </td>    
                         </tr>
-                        
-                        
                         
                         {% endfor %}
                     {% endif %}

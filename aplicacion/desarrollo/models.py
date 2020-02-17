@@ -16,6 +16,7 @@ from django.conf import settings # hacer referencia a nuestro modelo podemos apo
 # que lo referencian manualmente. Equivalente SQL: RESTRICT.
 
 
+
 class Usuario(AbstractUser):
     # blank=False es para que por narices metamos un numero, si lo ponemos a True, indicamos que puede meterse campo vacio
     ATRO = 'AT'
@@ -54,7 +55,7 @@ class Observacion(models.Model):
     hora_inicio = models.DateTimeField(null=True, blank=True) #indico que puedes meter nulo 
     hora_final = models.DateTimeField(null=True, blank=True)
     descripcion = models.TextField()
-    image = models.ImageField(upload_to='observacion/', height_field=None, width_field=None, max_length=100,blank=True,null=True)# me pide que haga pip install Pillow
+    image = models.ImageField(upload_to='observacion/', height_field=None, width_field=None, max_length=100,blank=True,null=True)
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.PROTECT)
     def __str__(self):
         return self.nombre
@@ -62,10 +63,19 @@ class Observacion(models.Model):
         verbose_name_plural='Observaciones'
 
 class Inscripciones(models.Model):
+    id_inscripcion = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100,blank = False,unique=True)
     observaciones = models.ForeignKey(Observacion,on_delete=models.CASCADE)#ForeignKey
     observatorios = models.ForeignKey(Observatorio,on_delete=models.CASCADE)
-
+    descripcion = models.TextField()
+    image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100)
+    
+    OPCION_INSCRIPCION = (
+    ('POS' , "Positivo"),
+    ('NEU' , "Neutro"),
+    ('NEGA' , "Negativo"))
+    opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
+   
     class Meta:#para crear clave primaria de dos campos
         unique_together  = ["observaciones", "observatorios"]
     def __str__(self):

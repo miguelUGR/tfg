@@ -11,18 +11,25 @@
 
 {% block listado %}
 <!-- Begin Page Content -->
-        <div class="container-fluid">
+        <div style="width: 50%; margin-left: 0; margin-right: 0;" class="container-fluid">
 
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Edicion</h1>
           <!-- DataTales Example -->
-          <div class="card shadow mb-4">
+          <div class="card shadow mb-4" width='50%'>
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">Edicion Usuario</h6>
             </div>
             <div class="card-body">
               <form method="POST" enctype="multipart/form-data" action="{% url 'modificar_usuario' %}">{% csrf_token %}
                 {{ form.as_p}}
+                <a href="{% url 'edit_passwd' %}" class="btn btn-secondary btn-icon-split">
+                  <span class="icon text-white-50">
+                    <i class="fas fa-arrow-right"></i>
+                  </span>
+                  <span class="text">Editar Contraseña</span>
+                </a>
+                <br><br>
                 <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
                 <a href="{% url 'base' %}" class="btn btn-info btn-icon-split">
                   <span class="icon text-white-50">
@@ -38,7 +45,24 @@
           </div>
 
         </div>
+        
         <!-- /.container-fluid -->
+{% endblock %}
+{% block secundario %}
+<div style="margin: auto;" class="col-xl-4 col-lg-5">
+  <h1 class="h3 mb-2 text-gray-800">Imagen</h1>
+  <div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Imagen Usuario</h6>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <img  style="width: 100%; height: 345px;" class="img-profile rounded-circle" src="/media/{{ user.image }}">
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 

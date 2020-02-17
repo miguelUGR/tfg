@@ -13,6 +13,8 @@ def iniciar(request):
     # return render (request,"login.html")
     return HttpResponseRedirect("/accounts/login/")
 
+def edit_passwd(request):
+    return HttpResponseRedirect("/accounts/password/change/")
 
 def base(request):
     # form = PostForm()
@@ -22,31 +24,25 @@ def base(request):
         global user,usuario_registrado
         user = request.user # PARA el template indice.html que permanezca el usuario registrado
         usuario_registrado=user.id # Para view.py y poder hacer filtrado de objetos del propio usuario
-    # for i in request.user: 
-    #     print(i)
-    print(request.user.image)
+
+    # print(request.user.image)
     return render (request,"index.html")
 
 def observaciones(request):
-
     # observaciones=Observacion.objects.all()
     # observaciones= observaciones.filter(user_id = usuario_registrado)
-
     # ----las dos lineas anteriores hacen lo mismo que la siguiente ----
     observaciones=Observacion.objects.all().filter(user= request.user.id)
-    # print (user.id)
-    # for i in observaciones:
-    #     print(i.user)
-    return render (request,"observaciones.html",{'name_user': user,'observacion':observaciones})
+    return render (request,"observaciones.html",{'name_user': request.user,'observacion':observaciones})
 
 
 def observatorios(request):
-    observatorios=Observatorio.objects.all().filter(user = usuario_registrado)
+    observatorios=Observatorio.objects.all().filter(user = request.user.id)
     # observatorios=ObservatorioForm.objects.all().filter(user= usuario_registrado)
-    return render (request,"observatorios.html",{'name_user': user,'observatorio':observatorios})
+    return render (request,"observatorios.html",{'name_user': request.user,'observatorio':observatorios})
 
 def inscripciones(request):
-    OBSERVATORIOS=Observatorio.objects.all().filter(user = usuario_registrado)
+    OBSERVATORIOS=Observatorio.objects.all().filter(user = request.user.id)
 
     inscripciones = [] 
     for i in OBSERVATORIOS:
@@ -57,7 +53,7 @@ def inscripciones(request):
         else:
             pass
     
-    return render(request,"inscripciones.html",{'name_user': user,'inscripcion':inscripciones})
+    return render(request,"inscripciones.html",{'name_user': request.user,'inscripcion':inscripciones})
    
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -67,7 +63,7 @@ def edit_observaciones(request):
     # print(nom_observacion)
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
-    return render(request, 'observaciones_edit.html', {'name_user': user,"form":form,"nom_observacion":nom_observacion})#tambien envio nombre del plato pk me hace falta
+    return render(request, 'observaciones_edit.html', {'name_user': request.user,"form":form,"nom_observacion":nom_observacion})#tambien envio nombre del plato pk me hace falta
 
 def edit_observatorios(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -98,7 +94,7 @@ def modificar_observacion(request):
         if form.is_valid():#aqui comprovamos que todo  son datos validados correctamente y lo guardamos
             form.save()  
             return redirect(observaciones)
-    return render(request,'observaciones_edit.html',{'name_user': user,'form':form,'nom_observacion':data['observacion_vieja']})
+    return render(request,'observaciones_edit.html',{'name_user': request.user,'form':form,'nom_observacion':data['observacion_vieja']})
     
 def modificar_observatorio(request):
     if request.session['observatorio_viejo']: #ME AHORRO el hacer observatorio_viejo etc como en observaciones
@@ -109,19 +105,21 @@ def modificar_observatorio(request):
             if form.is_valid():
                 form.save()
                 return redirect(observatorios)
-            return render(request,'observatorios_edit.html',{'name_user':user,'form':form})
+            return render(request,'observatorios_edit.html',{'name_user':request.user,'form':form})
 
 def modificar_user(request):
     if request.method == "POST":
         user_viejo=Usuario.objects.get(id = usuario_registrado)
-        form = UsuarioChangeForm(request.POST, request.FILES, instance=user_viejo) #importante request.FILES y poner el enctype <form enctype="multipart/form-data">
+        form = UsuarioChangeForm(request.POST, request.FILES, instance=user_viejo) #importante request.FILES y poner el enctype <form enctype="multipart/form-data"> para que se modifique la imagen cuando la cambias
         if form.is_valid():
             form.save()
-            return redirect(base)
-        return render(request,'usuario_edit.html',{'name_user':user,'form':form})
+            return redirect(edit_user)
+        return render(request,'usuario_edit.html',{'name_user':request.user,'form':form})
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# IMPORTANTE: al presionar el boton de Añadir...  es metodo GET 
+# solo cuando guardas,editas,borras envio UN form-->POST(utilizando el post)
 
 
 def crear_observaciones(request):
@@ -140,11 +138,11 @@ def crear_observaciones(request):
         else:
             print ('hola5')
             err=form.errors
-            return render(request,'observaciones_register.html',{'name_user': user,'form':form,'errors':err})
+            return render(request,'observaciones_register.html',{'name_user': request.user,'form':form,'errors':err})
     else:
         form = ObservacionForm()
         print ('hola2')
-    return render(request,'observaciones_register.html',{'name_user': user,'form':form})
+    return render(request,'observaciones_register.html',{'name_user': request.user,'form':form})
 
 def crear_observatorio(request):
     
@@ -154,16 +152,11 @@ def crear_observatorio(request):
             observatorio = form.save(commit=False) # lo que hago con estros tres pasos es decirle que me guarde el usuario logeado
             observatorio.user= user
             observatorio.save()
-            return redirect(observatorios)
-        # else:
-        #     form = ObservatorioForm(initial={'user':usuario_registrado})
+            return redirect(observatorios)   
+    else:   
+        form = ObservatorioForm(initial={'user':request.user.id})
         
-        
-    else:   #aqui nunca va, pero cuando da fallos a la hora de programar indico que me mande formulario con usuario=logeado por defecto
-        
-        form = ObservatorioForm(initial={'user':usuario_registrado})
-        
-    return render(request,'observatorios_register.html',{'name_user': user,'form':form})
+    return render(request,'observatorios_register.html',{'name_user': request.user,'form':form})
 
 def crear_inscripcion(request):
     # print('------HOLA1-----')
@@ -175,30 +168,17 @@ def crear_inscripcion(request):
     else:
         print("lalalal")
         form = InscripcionesForm()
+        # Lo que digo , es que de  todos los observatorios, solo aparezcan los del propio usuario registrado
         form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
     
-    return render(request,'inscripciones_register.html',{'name_user': user,'form':form})
+    return render(request,'inscripciones_register.html',{'name_user': request.user,'form':form})
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# def inscripciones(request):
-#     OBSERVATORIOS=Observatorio.objects.all().filter(user = usuario_registrado)
-
-#     inscripciones = [] 
-#     for i in OBSERVATORIOS:
-#         print(i)
-#         if  Inscripciones.objects.filter(observatorios = i).exists():
-#             inscripcion=Inscripciones.objects.get(observatorios = i)
-#             inscripciones.append(inscripcion)
-#         else:
-#             pass
-    
-#     return render(request,"inscripciones.html",{'name_user': user,'inscripcion':inscripciones})
-   
 
 def borrar_observaciones(request):
     data = request.POST.copy()
     request.session['observacion_borrar']=data['observacion']
-    return render(request,'observaciones_borrado.html',{'name_user': user})
+    return render(request,'observaciones_borrado.html',{'name_user': request.user})
 
 def borrar_confirmado_observacion(request):
     if request.session['observacion_borrar']:
@@ -209,7 +189,7 @@ def borrar_confirmado_observacion(request):
 def borrar_observatorio(request):
     data = request.POST.copy()
     request.session['observatorio_borrar']= data['observatorio']
-    return render(request,'observatorios_borrado.html',{'name_user':user})
+    return render(request,'observatorios_borrado.html',{'name_user':request.user})
 
 def borrar_confirmado_observatorio(request):
     if request.session['observatorio_borrar']:
@@ -220,7 +200,7 @@ def borrar_confirmado_observatorio(request):
 def borrar_inscripciones(request):
     data = request.POST.copy()
     request.session['inscripcion_borrar']= data['inscripcion']
-    return render(request,'inscripciones_borrado.html',{'name_user':user})
+    return render(request,'inscripciones_borrado.html',{'name_user':request.user})
 
 def borrar_confirmado_inscripcion(request):
     if request.session['inscripcion_borrar']:
