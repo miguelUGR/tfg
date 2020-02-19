@@ -63,12 +63,12 @@ class Observacion(models.Model):
         verbose_name_plural='Observaciones'
 
 class Inscripciones(models.Model):
-    id_inscripcion = models.AutoField(primary_key=True)
+    # id_inscripcion = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100,blank = False,unique=True)
     observaciones = models.ForeignKey(Observacion,on_delete=models.CASCADE)#ForeignKey
     observatorios = models.ForeignKey(Observatorio,on_delete=models.CASCADE)
-    descripcion = models.TextField()
-    image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100)
+    descripcion = models.TextField(blank=True,null=True)
+    image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100,blank= True,null=True)
     
     OPCION_INSCRIPCION = (
     ('POS' , "Positivo"),

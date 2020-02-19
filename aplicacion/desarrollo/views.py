@@ -8,7 +8,8 @@ from django.shortcuts import redirect #para redireccionar
 # Create your views here.
 def hola(request , nombre): #tiene dos parameteos el request para coger datos y el nombre que le pasamos <>
     return render (request,"hola.html",{'nombre': nombre}) # nos vamos ha hola.html 
-
+def  hola2(request):
+    return render(request,"index2.html")
 def iniciar(request):
     # return render (request,"login.html")
     return HttpResponseRedirect("/accounts/login/")
@@ -47,7 +48,7 @@ def inscripciones(request):
     inscripciones = [] 
     for i in OBSERVATORIOS:
         print(i)
-        if  Inscripciones.objects.filter(observatorios = i).exists():
+        if  Inscripciones.objects.filter(observatorios = i).exists(): # al poner un AutoField puede dar el caso de que tenga dos observaciones con distinto observatorio y me peta
             inscripcion=Inscripciones.objects.get(observatorios = i)
             inscripciones.append(inscripcion)
         else:

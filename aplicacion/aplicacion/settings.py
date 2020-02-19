@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount', # new p6s
 
     'desarrollo', #nuevo
-    'django_cleanup.apps.CleanupConfig' # PARA ELIMINACION AUTOMATICA imagen de Observaciones,
+    'django_cleanup.apps.CleanupConfig', # PARA ELIMINACION AUTOMATICA imagen de Observaciones,
+    'datetimewidget'
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
 AUTH_USER_MODEL = 'desarrollo.Usuario' #Esto es para poder coger el modelo usuario creado a partir del propio de django
