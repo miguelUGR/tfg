@@ -205,7 +205,7 @@ def borrar_inscripciones(request):
 
 def borrar_confirmado_inscripcion(request):
     if request.session['inscripcion_borrar']:
-        inscripcion = Inscripciones.objects.get(nombre=request.session['inscripcion_borrar'])
+        inscripcion = Inscripciones.objects.get(id_inscripcion=request.session['inscripcion_borrar'])
         inscripcion.delete()
         return redirect(inscripciones)
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

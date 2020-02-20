@@ -70,4 +70,4 @@ class ObservatorioForm(forms.ModelForm):
 class InscripcionesForm(forms.ModelForm):
     class Meta:
         model = Inscripciones
-        fields = ('nombre','observaciones','observatorios',)
+        fields = ('id_inscripcion','observaciones','observatorios','descripcion','image',)

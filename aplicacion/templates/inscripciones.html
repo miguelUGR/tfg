@@ -32,7 +32,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
+                      <th>ID</th>
                       <th>Observacion</th>
                       <th>Observatorio</th>  
                       <th>Borrado</th>
@@ -40,7 +40,7 @@
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Nombre</th>
+                      <th>ID</th>
                       <th>Observacion</th>
                       <th>Observatorio</th>       
                       <th>Borrado</th>
@@ -51,7 +51,7 @@
                     {% if inscripcion %}
                         {% for i in inscripcion %}
                         <tr>
-                        <td>{{i.nombre}}</td>
+                        <td>{{i.id_inscripcion}}</td>
                         <td>{{i.observaciones}}</td>
                         <td>{{i.observatorios}}</td>
             
@@ -64,7 +64,7 @@
                                     <span class="text">Borrar</span>
                                     
                                 </button>
-                                <input type="hidden" name="inscripcion" value="{{i.nombre}}">
+                                <input type="hidden" name="inscripcion" value="{{i.id_inscripcion}}">
                             </form>
                         </td>    
                         </tr>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Model 
+from django.core.exceptions import ValidationError
 # Create your models here.
 from django.core.validators import MinValueValidator
 from django.core.validators import MaxValueValidator
@@ -63,25 +64,35 @@ class Observacion(models.Model):
         verbose_name_plural='Observaciones'
 
 class Inscripciones(models.Model):
-    # id_inscripcion = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100,blank = False,unique=True)
+    id_inscripcion = models.AutoField(primary_key=True)
+    # nombre = models.CharField(max_length=100,blank = False,unique=True,)
     observaciones = models.ForeignKey(Observacion,on_delete=models.CASCADE)#ForeignKey
     observatorios = models.ForeignKey(Observatorio,on_delete=models.CASCADE)
-    # descripcion = models.TextField(blank=True,null=True)
-    # image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100,blank= True,null=True)
+    descripcion = models.TextField(blank=True,null=True)
+    image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100,blank= True,null=True)
     
-    # OPCION_INSCRIPCION = (
-    # ('POS' , "Positivo"),
-    # ('NEU' , "Neutro"),
-    # ('NEGA' , "Negativo"))
-    # opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
-   
+    OPCION_INSCRIPCION = (
+    ('POS' , "Positivo"),
+    ('NEU' , "Neutro"),
+    ('NEGA' , "Negativo"))
+    opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
+    
     class Meta:#para crear clave primaria de dos campos
         unique_together  = ["observaciones", "observatorios"]
+        
+    def clean(self):
+        direct = Inscripciones.objects.filter(observaciones = self.observaciones, observatorios = self.observatorios)
+        reverse = Inscripciones.objects.filter(observatorios = self.observatorios, observaciones = self.observaciones) 
+
+        if direct.exists() or reverse.exists():
+            raise ValidationError({'observaciones':'observatorios'})
+    
     def __str__(self):
-        return self.nombre
+        return str(self.id_inscripcion)
     class Meta:
         verbose_name_plural='Inscripciones'
+
+
     
 
 
