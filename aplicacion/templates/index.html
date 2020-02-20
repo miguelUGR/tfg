@@ -8,16 +8,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  
-    
-  
+  {% block cabeza %}
+
+  {% endblock %}
   <title>SB Admin 2 - Dashboard</title>
   
   {% load static %} 
     
-    {% block cabeza %}
-
-    {% endblock %}
 
     <!-- Custom fonts for this template-->
     
@@ -59,7 +56,19 @@
           <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
       </li>
+      <!-- Divider -->
+      <hr class="sidebar-divider">
 
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Observaciones
+      </div>
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'listado_observaciones' %}">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Listado</span></a>
+      </li>
       <!-- Divider -->
       <hr class="sidebar-divider">
 

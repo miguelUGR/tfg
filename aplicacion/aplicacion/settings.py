@@ -47,7 +47,8 @@ INSTALLED_APPS = [
 
     'desarrollo', #nuevo
     'django_cleanup.apps.CleanupConfig', # PARA ELIMINACION AUTOMATICA imagen de Observaciones,
-    'datetimewidget'
+    'datetimewidget',
+    
 ]
 SITE_ID = 1 #IMPORTANTISsIMO TENERLO PARA ENTRAR EN /admin
 AUTH_USER_MODEL = 'desarrollo.Usuario' #Esto es para poder coger el modelo usuario creado a partir del propio de django

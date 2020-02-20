@@ -36,5 +36,8 @@ urlpatterns = [
 
     path('edit_passwd',views.edit_passwd,name='edit_passwd'),
 
+
+path('listado_observaciones',views.listado_observaciones,name='listado_observaciones'),
+
 ] 
 

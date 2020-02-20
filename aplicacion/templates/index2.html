@@ -13,13 +13,56 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
 </head>
 <body>
+  <div class="container-fluid">
 
-  <input id="datetimepicker" type="text">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Añadir</h1>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Añadir Observaciones</h6>
+        {% if form.errors %}
+          <!-- Error messaging -->
+          <div >
+            <div>
+              <p>Hay algunos errores de informacion. corrija los siguientes errores</p>
+              <ul>
+                {% for field in form %}
+                  {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <!-- /Error messaging -->
+        {% endif %}
+      </div>
+      <div id="id_date" class="card-body">
+        <form method="POST" enctype='multipart/form-data' autocomplete="off" >{% csrf_token %}
+          {{ form.as_p}}
+          <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
+            <span class="icon text-white-50">
+              <i class="fas fa-info-circle"></i>
+            </span>
+            <span class="text">Volver Atras</span>
+          </a>
+          <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
+      </form>
+    </div>
+  </div>
+  <input id="pep" type="text">
 
   <script>
     $(function () {
-      $("#datetimepicker").datetimepicker();
+    $("#id_hora_inicio").datetimepicker({
+      format: 'd/m/Y H:i',
     });
+    $("#id_hora_final").datetimepicker({
+      format: 'd/m/Y H:i',
+    });
+    $("#pep").datetimepicker({
+      format: 'd/m/Y H:i',
+    });
+  });
   </script>
 
 </body>

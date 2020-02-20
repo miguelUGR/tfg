@@ -22,7 +22,7 @@ class UsuarioChangeForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name','last_name','solicitudAstro','image',)
+        fields = ('first_name','last_name','image',)
 
 class MiSignupForm(SignupForm):
     # Aqui lo que hago es para que me lo muestre a la hora de registrar nuevo usuario en la aplicacion
@@ -44,22 +44,24 @@ class MiSignupForm(SignupForm):
         user.solicitudAstro = self.cleaned_data['solicitudAstro']
         user.save()
         return user
-    
 
 class ObservacionForm(forms.ModelForm):
     class Meta:
         model = Observacion 
+        
         fields = ('nombre','fecha_observacion','latitude','longitude','duracion_ocultacion','hora_inicio','hora_final','descripcion','image',) #user le indico en view.py que es el mismo registrado
 
-    dateTimeOptions = {
-        'format': 'dd/mm/yyyy HH:ii P',
-        'autoclose': True,
-        'showMeridian' : True
-    }
-    widgets = {
-         'hora_inicio': DateTimeWidget(attrs={'id':"hora_inicio"}, usel10n = True, bootstrap_version=3),
-         'hora_final': DateTimeWidget(options = dateTimeOptions)
-    }
+     
+    
+    # dateTimeOptions = {
+    #     'format': 'dd/mm/yyyy HH:ii P',
+    #     'autoclose': True,
+    #     'showMeridian' : True
+    # }
+    # widgets = {
+    #      'hora_inicio': DateTimeWidget(attrs={'id':"hora_inicio"}, usel10n = True, bootstrap_version=3),
+    #      'hora_final': DateTimeWidget(options = dateTimeOptions)
+    # }
 
 
 class ObservatorioForm(forms.ModelForm):

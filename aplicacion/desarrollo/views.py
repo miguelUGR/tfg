@@ -37,6 +37,10 @@ def observaciones(request):
     return render (request,"observaciones.html",{'name_user': request.user,'observacion':observaciones})
 
 
+def listado_observaciones(request):
+    observaciones=Observacion.objects.all()
+    return render(request,"listado_observaciones.html",{'name_user': request.user,'observacion':observaciones})
+
 def observatorios(request):
     observatorios=Observatorio.objects.all().filter(user = request.user.id)
     # observatorios=ObservatorioForm.objects.all().filter(user= usuario_registrado)
@@ -139,11 +143,11 @@ def crear_observaciones(request):
         else:
             print ('hola5')
             err=form.errors
-            return render(request,'observaciones_register.html',{'name_user': request.user,'form':form,'errors':err})
+            return render(request,'index2.html',{'name_user': request.user,'form':form,'errors':err})
     else:
         form = ObservacionForm()
         print ('hola2')
-    return render(request,'observaciones_register.html',{'name_user': request.user,'form':form})
+    return render(request,'index2.html',{'name_user': request.user,'form':form})
 
 def crear_observatorio(request):
     
@@ -209,6 +213,7 @@ def borrar_confirmado_inscripcion(request):
         inscripcion.delete()
         return redirect(inscripciones)
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
