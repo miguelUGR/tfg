@@ -67,14 +67,14 @@ class Inscripciones(models.Model):
     nombre = models.CharField(max_length=100,blank = False,unique=True)
     observaciones = models.ForeignKey(Observacion,on_delete=models.CASCADE)#ForeignKey
     observatorios = models.ForeignKey(Observatorio,on_delete=models.CASCADE)
-    descripcion = models.TextField(blank=True,null=True)
-    image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100,blank= True,null=True)
+    # descripcion = models.TextField(blank=True,null=True)
+    # image = models.ImageField(upload_to='inscripciones/', height_field=None, width_field=None, max_length=100,blank= True,null=True)
     
-    OPCION_INSCRIPCION = (
-    ('POS' , "Positivo"),
-    ('NEU' , "Neutro"),
-    ('NEGA' , "Negativo"))
-    opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
+    # OPCION_INSCRIPCION = (
+    # ('POS' , "Positivo"),
+    # ('NEU' , "Neutro"),
+    # ('NEGA' , "Negativo"))
+    # opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
    
     class Meta:#para crear clave primaria de dos campos
         unique_together  = ["observaciones", "observatorios"]
