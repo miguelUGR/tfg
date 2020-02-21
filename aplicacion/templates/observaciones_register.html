@@ -1,16 +1,6 @@
 {% extends "index.html" %}
 {% block cabeza %}
-  <!-- LO NUEVO PARA EL FORM DATETIMEFIELD  -->
-  <!-- <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"> </script>
-  <script src="/static/css/bootstrap.css"></script>
-  <script src="/static/js/bootstrap.js"></script> -->
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-  <!-- XDSoft DateTimePicker -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
-
+  
 {% endblock %}
 {% block pagina %}
 <!-- Page Heading -->
@@ -46,7 +36,7 @@
               {% endif %}
             </div>
             <div id="id_date" class="card-body">
-              <form method="POST" enctype='multipart/form-data'  >{% csrf_token %}
+              <form method="POST" enctype='multipart/form-data' autocomplete="off" >{% csrf_token %}
                 {{ form.as_p}}
                 <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
                   <span class="icon text-white-50">
@@ -61,11 +51,18 @@
           <input id="datetimepicker" type="text">
           {% block footer%}
           <script>
-            $(function () {
-              $("#id_hora_inicio").datetimepicker();
-            });
+              $("#id_hora_inicio").datetimepicker({
+                format: 'd/m/Y H:i',
+              });
+              $("#id_hora_final").datetimepicker({
+                format: 'd/m/Y H:i',
+              });
+              $("#id_fecha_observacion").datepicker({
+                format: 'dd/mm/yyyy',
+              });
+              
           </script>
-            <!-- <script>
+            <!-- <script  EN MODO FUNCION ME DA ERROR EN LA CONSOLA>
               $(function () {
                 $("#id_hora_inicio").datepicker({
                   format:'dd/mm/yyyy',

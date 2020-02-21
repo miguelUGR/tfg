@@ -143,11 +143,11 @@ def crear_observaciones(request):
         else:
             print ('hola5')
             err=form.errors
-            return render(request,'index2.html',{'name_user': request.user,'form':form,'errors':err})
+            return render(request,'observaciones_register.html',{'name_user': request.user,'form':form,'errors':err})
     else:
         form = ObservacionForm()
         print ('hola2')
-    return render(request,'index2.html',{'name_user': request.user,'form':form})
+    return render(request,'observaciones_register.html',{'name_user': request.user,'form':form})
 
 def crear_observatorio(request):
     
