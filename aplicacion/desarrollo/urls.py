@@ -36,8 +36,13 @@ urlpatterns = [
 
     path('edit_passwd',views.edit_passwd,name='edit_passwd'),
 
+    path('listado_observaciones',views.listado_observaciones,name='listado_observaciones'),
 
-path('listado_observaciones',views.listado_observaciones,name='listado_observaciones'),
+    path('notificacion',views.notificaciones,name='notificacion'),
+    path('aceptar_notificacion',views.aceptar_notificaciones,name='aceptar_notificacion'),
+    path('denegar_notificacion',views.denegar_notificaciones,name='denegar_notificacion'),
+
+    path('borrar_confirmado_notificacion',views.borrar_confirmado_notificacion,name='borrar_confirmado_notificacion'),
 
 ] 
 

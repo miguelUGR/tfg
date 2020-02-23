@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 from django.core.validators import MaxValueValidator
 from django.contrib.auth.models import AbstractUser #Para heredar del usuario ya creado de django
 from django.conf import settings # hacer referencia a nuestro modelo podemos apoyarnos de la constante AUTH_USER_MODEL.
+from django.utils import timezone
 # para crear el modelo plato ponemos en el terminal: 
 # - python manage.py makemigrations restaurantes
 # para migrarlo y poder verlo desde el navegador (http://localhost:8080/admin/) ponemos en el terminal primero:
@@ -42,7 +43,7 @@ class Observatorio(models.Model):
     longitude = models.DecimalField(max_digits=100, decimal_places=6)
     distanciaFocal = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],blank= False) 
     
-    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.PROTECT)
+    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre
@@ -57,7 +58,7 @@ class Observacion(models.Model):
     hora_final = models.DateTimeField(null=True, blank=True)
     descripcion = models.TextField()
     image = models.ImageField(upload_to='observacion/', height_field=None, width_field=None, max_length=100,blank=True,null=True)
-    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.PROTECT)
+    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.CASCADE)
     def __str__(self):
         return self.nombre
     class Meta:
@@ -91,6 +92,33 @@ class Inscripciones(models.Model):
         return str(self.id_inscripcion)
     class Meta:
         verbose_name_plural='Inscripciones'
+
+class Notificaciones(models.Model):
+    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.CASCADE)
+    TIPO_NOTIFICACION = (
+    ('SOLICITUD' , "Solitita cambio a Usuario Astro"),
+    ('OBSERVACION_MODIFICADA' , "ha habido Modificacion en la observacion"),
+    ('NONE' , "Ninguna"))
+    tipoNotificacion= models.CharField(max_length = 150, choices = TIPO_NOTIFICACION, default='NONE' )
+    date = models.DateField(default=timezone.now)
+
+    class Meta:#para crear clave primaria de dos campos
+        unique_together  = ["user", "tipoNotificacion"]
+    def clean(self):
+        direct = Notificaciones.objects.filter(user = self.user, tipoNotificacion = self.tipoNotificacion)
+        reverse = Notificaciones.objects.filter(tipoNotificacion = self.tipoNotificacion, user = self.user) 
+
+        if direct.exists() or reverse.exists():
+            raise ValidationError({'user':'tipoNotificacion'})
+
+    def __str__(self):
+        cadena = str(self.user)+"_"+self.tipoNotificacion
+        return cadena
+    class Meta:
+        verbose_name_plural='Notificaciones'
+
+
+
 
 
     

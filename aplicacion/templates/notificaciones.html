@@ -3,12 +3,11 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    <h1 class="h3 mb-0 text-gray-800">Notificaciones</h1>
     <a href="{% url 'crear_observacion' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
       <span class="icon text-white-50">
         <i class="fas fa-download fa-sm text-white-50"></i>
       </span>
-      <span class="text">Añadir Observacion</span>
     </a>
 </div>
 {% endblock %}
@@ -24,53 +23,64 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observaciones</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Tabla de Notificaciones</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Fecha Observacion</th>
                       <th>Usuario</th>
-                      <th>Ver_Completo</th>
-                      
+                      <th>Solicitud</th>
+                      <th>Fecha</th>
+                      <th>Aceptar</th>
+                      <th>Denegar</th>
                       
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Fecha Observacion</th>
                       <th>Usuario</th>
-                      <th>Ver_Completo</th>
-                      
+                      <th>Solicitud</th>
+                      <th>Fecha</th>
+                      <th>Aceptar</th>
+                      <th>Denegar</th>
 
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if observacion %}
-                        {% for i in observaciones %}
+                    {% if notificaciones %}
+                        {% for i in notificaciones %}
                         <tr>
-                        <td>{{i.nombre}}</td>
-                        <td>{{i.fecha_observacion}}</td>
                         <td>{{i.user}}</td>
+                        <td>{{i.tipoNotificacion}}</td>
+                        <td>{{i.date}}</td>
                         
                         <td>
-                            <form method="POST"  action="{% url 'editar_observacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'aceptar_notificacion' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
-                                    <span class="text">Ver</span>
+                                    <span class="text">Aceptar</span>
+                                    
+                                </button>
+                                <input type="hidden" name="notificacion" value="{{i.user}}">
+                            </form> 
+                        </td>
+                        <td>
+                            <form method="POST"  action="{% url 'denegar_notificacion' %}">{% csrf_token %}
+                                <button   class="btn btn-danger btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span class="text">Denegar</span>
                                     
                                 </button>
                                     
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
-                            </form> 
+                                <input type="hidden" name="notificacion" value="{{i.user}}">
+                            </form>
                         </td>
-                        
                                 
                         </tr>
                         

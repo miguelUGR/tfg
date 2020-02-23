@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario,Observatorio,Observacion,Inscripciones
+from .models import Usuario,Observatorio,Observacion,Inscripciones,Notificaciones
 
 from django.contrib.auth.admin import UserAdmin
 from .forms import UsuarioCreationForm, UsuarioChangeForm
@@ -14,6 +14,7 @@ admin.site .register(Usuario)
 admin.site .register(Observatorio)
 admin.site .register(Observacion)
 admin.site .register(Inscripciones)
+admin.site .register(Notificaciones)
 
 #--ESTO ES PARA  visualizacion mas bonita en http://127.0.0.1:8000/admin/desarrollo/usuario/
 # class UsuarioAdmin(UserAdmin):

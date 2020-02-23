@@ -5,7 +5,6 @@
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
   {% block cabeza %}
@@ -85,14 +84,15 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Edición:</h6>
-            {% if user.tipoUsuario == "AT" %}
+            {% if request.user.tipoUsuario == "AT" %}
             <a class="collapse-item" href="{% url 'observacion' %}">Observaciones</a>
             {% endif %}
             
-            {% if user.tipoUsuario == "AF" %}
+            {% if request.user.tipoUsuario == "AF" %}
             <a class="collapse-item" href="{% url 'observatorio' %}">Observatorios</a>
             <a class="collapse-item" href="{% url 'inscripcion' %}">Inscripciones</a>
             {% endif %}
+
           </div>
         </div>
       </li>
@@ -194,7 +194,7 @@
             </div>
           </form>
 
-          <!-- Topbar Navbar -->
+<!----------- Topbar Navbar NOTIFICACIONES ---------->
           <ul class="navbar-nav ml-auto">
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
@@ -222,24 +222,32 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                {% if 'notificaciones' in request.session %}
+                  <span class="badge badge-danger badge-counter">{{request.session.notificaciones}}+</span>
+                {% endif %} 
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                 <h6 class="dropdown-header">
-                  Alerts Center
+                  Notificaciones
                 </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
+                {% if 'notificaciones' in request.session %}
+            
+                <a class="dropdown-item d-flex align-items-center" href="{% url 'notificacion' %}">
                   <div class="mr-3">
                     <div class="icon-circle bg-primary">
                       <i class="fas fa-file-alt text-white"></i>
                     </div>
                   </div>
                   <div>
-                    <div class="small text-gray-500">December 12, 2019</div>
-                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                    <div class="small text-gray-500">Click para ver listado</div>
+                    <span class="font-weight-bold">Usuario/s solicitan ser Usuario AtroFisico</span>
                   </div>
                 </a>
+              {% endif %} 
+
+          
+                
                 <a class="dropdown-item d-flex align-items-center" href="#">
                   <div class="mr-3">
                     <div class="icon-circle bg-success">
@@ -293,7 +301,7 @@
                     <img class="rounded-circle" src="https://source.unsplash.com/AU4VPcFN4LE/60x60" alt="">
                     <div class="status-indicator"></div>
                   </div>
-                  <div>
+                  <div >
                     <div class="text-truncate">I have the photos that you ordered last month, how would you like them sent to you?</div>
                     <div class="small text-gray-500">Jae Chun · 1d</div>
                   </div>

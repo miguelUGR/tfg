@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import Usuario, Observatorio, Observacion, Inscripciones
+from .models import Usuario, Observatorio, Observacion, Inscripciones, Notificaciones
 from allauth.account.forms import SignupForm
 from datetimewidget.widgets import DateTimeWidget
 # class UserForm(forms.ModelForm):
@@ -22,7 +22,7 @@ class UsuarioChangeForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ('first_name','last_name','image',)
+        fields = ('first_name','last_name','image','solicitudAstro',)
 
 class MiSignupForm(SignupForm):
     # Aqui lo que hago es para que me lo muestre a la hora de registrar nuevo usuario en la aplicacion
@@ -61,3 +61,8 @@ class InscripcionesForm(forms.ModelForm):
     class Meta:
         model = Inscripciones
         fields = ('id_inscripcion','observaciones','observatorios','descripcion','image',)
+
+class NotificacionForm(forms.ModelForm):
+    class Meta:
+        model = Notificaciones
+        fields= ('tipoNotificacion','user',)
