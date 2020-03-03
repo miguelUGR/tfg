@@ -32,7 +32,6 @@
                     <tr>
                       <th>Usuario</th>
                       <th>Solicitud</th>
-                      <th>Fecha</th>
                       <th>Aceptar</th>
                       <th>Denegar</th>
                       
@@ -42,22 +41,21 @@
                     <tr>
                       <th>Usuario</th>
                       <th>Solicitud</th>
-                      <th>Fecha</th>
                       <th>Aceptar</th>
                       <th>Denegar</th>
 
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if notificaciones %}
-                        {% for i in notificaciones %}
+                    {% if usuario %}
+                        {% for i in usuario %}
                         <tr>
-                        <td>{{i.user}}</td>
-                        <td>{{i.tipoNotificacion}}</td>
+                        <td>{{i.username}}</td>
+                        <td><p>Solicita cambio a usuario Astrofisico</p></td>
                         <td>{{i.date}}</td>
                         
                         <td>
-                            <form method="POST"  action="{% url 'aceptar_notificacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'aceptar_notifi_Astro' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
@@ -65,20 +63,20 @@
                                     <span class="text">Aceptar</span>
                                     
                                 </button>
-                                <input type="hidden" name="notificacion" value="{{i.user}}">
+                                <input type="hidden" name="notificacion" value="{{i.id}}">
                             </form> 
                         </td>
                         <td>
-                            <form method="POST"  action="{% url 'denegar_notificacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'denegar_notifi_Astro' %}">{% csrf_token %}
                                 <button   class="btn btn-danger btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
-                                    <span class="text">Denegar</span>
+                                    <span class="text">Denegarr</span>
                                     
                                 </button>
                                     
-                                <input type="hidden" name="notificacion" value="{{i.user}}">
+                                <input type="hidden" name="notificacion" value="{{i.id}}">
                             </form>
                         </td>
                                 

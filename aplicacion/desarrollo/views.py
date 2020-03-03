@@ -18,44 +18,30 @@ def edit_passwd(request):
     return HttpResponseRedirect("/accounts/password/change/")
 
 def base(request):
-    # form = PostForm()
-    # return render (request,"inicio.html",{'form': form})
-    
+  
     if request.user.is_authenticated:
         global user,usuario_registrado
         user = request.user # PARA el template indice.html que permanezca el usuario registrado YA NO ME HACEN FALTA
         usuario_registrado=user.id # Para view.py y poder hacer filtrado de objetos del propio usuario YA NO ME HACEN FALTA
         print(request.user.solicitudAstro)
     
+    
+    solicitudAstro,notificaciones=comun()
+    print(notificaciones)
+    return render (request,"index.html",{'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
+#--------------------  ----------------  ----------------  ----------------  ----------------  ----------------  ----------------  
+def comun():
     usuarios= Usuario.objects.all().filter(tipoUsuario = 'AF')
+    ifSoliAstro = False
     for i in usuarios:
         if i.solicitudAstro == True:
-            print (i.id)
-            new_notificacion= Notificaciones(user=i,tipoNotificacion="SOLICITUD")
-             # pongo el booleano a false, pk ya he generado la notificacion de que el usuario registrado quiere ser super                   
-            if not Notificaciones.objects.filter(user = i).exists():
-                print("guardando_y_modificado")
-                new_notificacion.save()
-                i.solicitudAstro=False
-                i.save()
-    notificaciones=Notificaciones.objects.filter(tipoNotificacion = 'SOLICITUD')           
-    request.session['notificaciones'] = notificaciones.count()
-    #compruevo si tengo notificaciones tipo SOLICITUD
-    if request.session['notificaciones']  > 0:
-        if request.user.tipoUsuario == 'AT':
-            print('Usuario astro')
-            print(request.session['notificaciones'] )
-            request.session['notificaciones']= 1
-    else:
-        print('eliminacion se la sesion')
-        if 'notificaciones' in request.session: # si no tenemos ninguna notificacion, elimino
-            del request.session['notificaciones']
-
-
-    return render (request,"index.html")
+                ifSoliAstro = True
+                break
+    notificaciones = Notificaciones.objects.all()
    
+    return (ifSoliAstro,notificaciones)  
 
-#---------------------------------------LISTADO-------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------  ----------------  ----------------  LISTADO ----------------  ----------------  ----------------  
 def observaciones(request):
     # observaciones=Observacion.objects.all()
     # observaciones= observaciones.filter(user_id = usuario_registrado)
@@ -65,7 +51,15 @@ def observaciones(request):
 
 def listado_observaciones(request):
     observaciones=Observacion.objects.all()
+    print("holA_listado")
     return render(request,"listado_observaciones.html",{'observaciones':observaciones})
+
+def ver_observacion(request):
+    data = request.POST.copy() #cogo todo lo que me viene 
+    nom_observacion = data['observacion']
+    observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
+    form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
+    return render(request, 'observacion_show.html', {"form":form,"nom_observacion":nom_observacion})#tambien envio nombre del plato pk me hace falta
 
 def observatorios(request):
     observatorios=Observatorio.objects.all().filter(user = request.user.id)
@@ -74,30 +68,25 @@ def observatorios(request):
 
 def inscripciones(request):
     OBSERVATORIOS=Observatorio.objects.all().filter(user = request.user.id)
-
-    inscripciones = [] 
+    inscripciones_totales = [] 
+    inscripcion = []            #puede ser que en el if me devuelva mas de una, pk un observatorio este inscrito en mas de una observacion
     for i in OBSERVATORIOS:
-        print(i)
+        # print("Observatorios = ",i)
         if  Inscripciones.objects.all().filter(observatorios = i).exists(): # al poner un AutoField puede dar el caso de que tenga dos observaciones con distinto observatorio y me peta
-            inscripcion=Inscripciones.objects.get(observatorios = i)
-            inscripciones.append(inscripcion)
+            inscripcion=Inscripciones.objects.all().filter(observatorios = i) #Ojo si ponemos objects.get() si devuelve dos, da problemas
+            for i in inscripcion: # IMPORTANTISIMO hacer un for, pk si inscripcion tiene mas de un elemento, es un querySet y no se representa bien luego en el html, e individualmente [se me ponian en bloque al devover mas de uno]
+                # print("Inscripcion = ",i) 
+                inscripciones_totales.append(i) 
         else:
             pass
-    
-    return render(request,"inscripciones.html",{'inscripcion':inscripciones})
+    return render(request,"inscripciones.html",{'inscripciones':inscripciones_totales})
    
-def notificaciones(request):
-    notificaciones=Notificaciones.objects.filter(tipoNotificacion = 'SOLICITUD')           
-    request.session['notificaciones'] = notificaciones.count()  
-    if request.session['notificaciones'] < 1: #pk cuando elimino todas, el nº rojo de la notificacion no se ba hasta que no pase por base()
-        del request.session['notificaciones']
-    else:
-        request.session['notificaciones']=1 # como he sobrescribido pues para que no se vea 
-    return render(request,"notificaciones.html",{'notificaciones':notificaciones})
+def solicitudAstro(request):
+    usuarios= Usuario.objects.all().filter(solicitudAstro = True)
+    return render(request,"notificacion_solicitud.html",{'usuario':usuarios})
 
 
-#---------------------------------------EDICION-------------------------------------------------------------------------------------------------------------------------------------------------
-
+#----------------  ----------------  ----------------  EDICION ----------------  ----------------  ----------------  
 def edit_observaciones(request):
     data = request.POST.copy() #cogo todo lo que me viene 
     nom_observacion = data['observacion']
@@ -122,24 +111,25 @@ def edit_user(request):
     form =UsuarioChangeForm (instance = request.user)
     return render(request,'usuarios_edit.html',{'name_user':user,'form':form})
 
-def aceptar_notificaciones(request):
+def aceptar_notifi_Astro(request):
     data = request.POST.copy()
     print(data['notificacion'])
-    usuario= Usuario.objects.get(username = data['notificacion'])
+    usuario= Usuario.objects.get(id = data['notificacion'])
     usuario.tipoUsuario='AT'
+    usuario.solicitudAstro= False
     usuario.save()
 
     #invalid literal for int() with base 10: 'leonora'  
     # notificacion=Notificaciones.objects.get(user= str(data['notificacion'])) #field. Choices are: date, id, tipoNotificacion, user, user_id
     # COMO ME DA ERROR en la linea anterior DE QUE LOS CAMPOS NO SON IGUALES, realizo lo siguiente
-    dato=usuario.id
-    notificacion=Notificaciones.objects.get(user_id= dato)
-    notificacion.delete()
+    # dato=usuario.id
+    # notificacion=Notificaciones.objects.get(user_id= dato)
+    # notificacion.delete()
     # del request.session['notificaciones'] # lo hago en base()
-    return redirect(notificaciones)
+    return redirect(solicitudAstro)
 
 
-#------------------------------------MODIFICACION----------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------  ----------------  ----------------  MODIFICACION ----------------  ----------------  ----------------  
 
 
 def modificar_observacion(request):
@@ -149,7 +139,30 @@ def modificar_observacion(request):
         form = ObservacionForm(request.POST, request.FILES, instance=observacion_vieja) #Indicamos que el formulario que ha creado , tenga los datos que hemos rellenado y lo subcriba  en la instancia que le pasamos
         if form.is_valid():#aqui comprovamos que todo  son datos validados correctamente y lo guardamos
             form.save()  
+#----------APARTADO--NOTIFICACIONES-----------
+            #--1)Buscar en inscripciones, la observacion_vieja cuantas veces aparece y si esta coger los usuarios 
+            inscripciones = [] 
+            observatorio = []
+            user = []
+            if  Inscripciones.objects.all().filter(observaciones_id = observacion_vieja).exists(): # al poner un AutoField puede dar el caso de que tenga dos observaciones con distinto observatorio y me peta
+                print("--ESTAMOS En NOTIFICACIONES--")
+                inscripciones=Inscripciones.objects.all().filter(observaciones_id = observacion_vieja)
+                # print(inscripciones) #Es un queryset, debemos hacer un bucle
+                for i in inscripciones: # Obtengo todos los observatorios 
+                    observatorio.append(i.observatorios)
+                  
+                for i in observatorio:#Cojo todos los usuarios eliminando repetido(puede dar el caso, usuario con mas de un observatorio en la misma observacion)
+                    # print("usuario = ",i.user)
+                       if i.user not in user:  # elimino repetidos, para no generar notificaciones repetidas
+                           user.append(i.user)
+                for i in user:
+                    # print("UsuariosNo = ", i) 
+                    new_notificacion=Notificaciones(user=i,descripcion="Modificacion de Observacion",observacion=observacion_vieja)
+                    new_notificacion.save()
+
+                
             return redirect(observaciones)
+
     return render(request,'observaciones_edit.html',{'form':form,'nom_observacion':data['observacion_vieja']})
     
 def modificar_observatorio(request):
@@ -172,8 +185,7 @@ def modificar_user(request):
             return redirect(edit_user)
         return render(request,'usuario_edit.html',{'name_user':request.user,'form':form})
 
-
-#------------------------------------------CRECION----------------------------------------------------------------------------------------------------------------------------------------------
+#----------------  ----------------  ----------------  CREACION ----------------  ----------------  ----------------    
 # IMPORTANTE: al presionar el boton de Añadir...  es metodo GET 
 # solo cuando guardas,editas,borras envio UN form-->POST(utilizando el post)
 
@@ -229,8 +241,7 @@ def crear_inscripcion(request):
     
     return render(request,'inscripciones_register.html',{'form':form})
 
-#-----------------------------------------------BORRADO-----------------------------------------------------------------------------------------------------------------------------------------
-
+#----------------  ----------------  ----------------  BORRADO ----------------  ----------------  ----------------  
 def borrar_observaciones(request):
     data = request.POST.copy()
     request.session['observacion_borrar']=data['observacion']
@@ -264,19 +275,17 @@ def borrar_confirmado_inscripcion(request):
         inscripcion.delete()
         return redirect(inscripciones)
 
-def denegar_notificaciones(request):
+def denegar_notifi_Astro(request):
     data = request.POST.copy()
     request.session['notificacion_borrar']=data['notificacion']
-    return render(request,'notificaciones_borrado.html')
+    return render(request,'notificaciones_solicitud_borrado.html')
 
-def borrar_confirmado_notificacion(request):
+def borrar_confirmado_notifi_Astro(request):
     if request.session['notificacion_borrar']: 
-        usuario= Usuario.objects.get(username = request.session['notificacion_borrar']) 
-        dato=usuario.id
-        # este problema y solucion es el mismo que en aceptar_notificaciones(), como no podia poner user = ... en filtar() notificaciones 
-        notificacion=Notificaciones.objects.all().filter(user_id= dato) #field. Choices are: date, id, tipoNotificacion, user, user_id
-        notificacion.delete() # elimino la notificacion
-        return redirect(notificaciones)
+        usuario= Usuario.objects.get(id = request.session['notificacion_borrar'])
+        usuario.solicitudAstro= False
+        usuario.save()
+        return redirect(solicitudAstro)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

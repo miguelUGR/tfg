@@ -43,7 +43,7 @@ class Observatorio(models.Model):
     longitude = models.DecimalField(max_digits=100, decimal_places=6)
     distanciaFocal = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],blank= False) 
     
-    user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.CASCADE)
+    user = models.ForeignKey(Usuario,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nombre
@@ -89,30 +89,20 @@ class Inscripciones(models.Model):
             raise ValidationError({'observaciones':'observatorios'})
     
     def __str__(self):
-        return str(self.id_inscripcion)
+        return str(self.id_inscripcion)+"_["+str(self.observaciones)+"]_["+str(self.observatorios)+"]"
+        # return str(self.id_inscripcion)
     class Meta:
         verbose_name_plural='Inscripciones'
 
 class Notificaciones(models.Model):
+    id_notificacion = models.AutoField(primary_key=True)
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.CASCADE)
-    TIPO_NOTIFICACION = (
-    ('SOLICITUD' , "Solitita cambio a Usuario Astro"),
-    ('OBSERVACION_MODIFICADA' , "ha habido Modificacion en la observacion"),
-    ('NONE' , "Ninguna"))
-    tipoNotificacion= models.CharField(max_length = 150, choices = TIPO_NOTIFICACION, default='NONE' )
     date = models.DateField(default=timezone.now)
-
-    class Meta:#para crear clave primaria de dos campos
-        unique_together  = ["user", "tipoNotificacion"]
-    def clean(self):
-        direct = Notificaciones.objects.filter(user = self.user, tipoNotificacion = self.tipoNotificacion)
-        reverse = Notificaciones.objects.filter(tipoNotificacion = self.tipoNotificacion, user = self.user) 
-
-        if direct.exists() or reverse.exists():
-            raise ValidationError({'user':'tipoNotificacion'})
-
+    descripcion = models.TextField(blank=True) #indicar que observacion se ha modificado con un texto 
+    observacion = models.ForeignKey(Observacion,on_delete=models.CASCADE,null=True, blank=True)
+    
     def __str__(self):
-        cadena = str(self.user)+"_"+self.tipoNotificacion
+        cadena = str(self.id_notificacion)+"_"+str(self.user)
         return cadena
     class Meta:
         verbose_name_plural='Notificaciones'

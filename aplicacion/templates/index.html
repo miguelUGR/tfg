@@ -87,9 +87,9 @@
             {% if request.user.tipoUsuario == "AT" %}
             <a class="collapse-item" href="{% url 'observacion' %}">Observaciones</a>
             {% endif %}
-            
-            {% if request.user.tipoUsuario == "AF" %}
+
             <a class="collapse-item" href="{% url 'observatorio' %}">Observatorios</a>
+            {% if request.user.tipoUsuario == "AF" %}
             <a class="collapse-item" href="{% url 'inscripcion' %}">Inscripciones</a>
             {% endif %}
 
@@ -222,8 +222,8 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                {% if 'notificaciones' in request.session %}
-                  <span class="badge badge-danger badge-counter">{{request.session.notificaciones}}+</span>
+                {% if solicitudAstro == True and request.user.tipoUsuario == "AT" %}
+                  <span class="badge badge-danger badge-counter">1+</span>
                 {% endif %} 
               </a>
               <!-- Dropdown - Alerts -->
@@ -231,9 +231,9 @@
                 <h6 class="dropdown-header">
                   Notificaciones
                 </h6>
-                {% if 'notificaciones' in request.session %}
+                {% if solicitudAstro == True and request.user.tipoUsuario == "AT" %}
             
-                <a class="dropdown-item d-flex align-items-center" href="{% url 'notificacion' %}">
+                <a class="dropdown-item d-flex align-items-center" href="{% url 'solicitudAstro' %}">
                   <div class="mr-3">
                     <div class="icon-circle bg-primary">
                       <i class="fas fa-file-alt text-white"></i>
@@ -372,6 +372,12 @@
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Administracion</h1>
+            <div>
+              <p>PEPE</p>
+              {% for i in notificacion %}
+                <p> {{i.user}} </p>
+              {% endfor %}
+            </div>
             <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a> -->
           </div>
           {% endblock %}

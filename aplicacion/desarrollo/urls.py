@@ -30,19 +30,19 @@ urlpatterns = [
     path('borrar_confirmado_inscripcion',views.borrar_confirmado_inscripcion,name='borrar_confirmado_inscripcion'),
     path('crear_inscripcion',views.crear_inscripcion,name='crear_inscripcion'),
 
-
     path('editar_usuario',views.edit_user,name='editar_usuario'),
     path('modificar_usuario',views.modificar_user,name='modificar_usuario'),
 
     path('edit_passwd',views.edit_passwd,name='edit_passwd'),
 
     path('listado_observaciones',views.listado_observaciones,name='listado_observaciones'),
+    path('ver_observacion',views.ver_observacion,name='ver_observacion'),
 
-    path('notificacion',views.notificaciones,name='notificacion'),
-    path('aceptar_notificacion',views.aceptar_notificaciones,name='aceptar_notificacion'),
-    path('denegar_notificacion',views.denegar_notificaciones,name='denegar_notificacion'),
+    path('solicitudAstro',views.solicitudAstro,name='solicitudAstro'),
+    path('aceptar_notifi_Astro',views.aceptar_notifi_Astro,name='aceptar_notifi_Astro'),
+    path('denegar_notifi_Astro',views.denegar_notifi_Astro,name='denegar_notifi_Astro'),
 
-    path('borrar_confirmado_notificacion',views.borrar_confirmado_notificacion,name='borrar_confirmado_notificacion'),
+    path('borrar_confirmado_notifi_Astro',views.borrar_confirmado_notifi_Astro,name='borrar_confirmado_notifi_Astro'),
 
 ] 
 

@@ -50,7 +50,7 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if observacion %}
+                    {% if observaciones %}
                         {% for i in observaciones %}
                         <tr>
                         <td>{{i.nombre}}</td>
@@ -58,15 +58,14 @@
                         <td>{{i.user}}</td>
                         
                         <td>
-                            <form method="POST"  action="{% url 'editar_observacion' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'ver_observacion' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
                                     <span class="text">Ver</span>
-                                    
                                 </button>
-                                    
+                                   
                                 <input type="hidden" name="observacion" value="{{i.nombre}}">
                             </form> 
                         </td>

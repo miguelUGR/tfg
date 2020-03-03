@@ -25,7 +25,7 @@
                 <div >
                   <div>
                     <p>Hay algunos errores de informacion. corrija los siguientes errores</p>
-                    <ul>
+                    <ul style="color: red;">
                       {% for field in form %}
                         {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
                       {% endfor %}
@@ -48,14 +48,14 @@
             </form>
             </div>
           </div>
-          <input id="datetimepicker" type="text">
+          <!-- <input id="datetimepicker" type="text"> -->
           {% block footer%}
           <script>
               $("#id_hora_inicio").datetimepicker({
-                format: 'd/m/Y H:i',
+                format: 'd/m/Y H:i:s',
               });
               $("#id_hora_final").datetimepicker({
-                format: 'd/m/Y H:i',
+                format: 'd/m/Y H:i:s',
               });
               $("#id_fecha_observacion").datepicker({
                 format: 'dd/mm/yyyy',
