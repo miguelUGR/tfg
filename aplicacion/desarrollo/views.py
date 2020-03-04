@@ -17,6 +17,21 @@ def iniciar(request):
 def edit_passwd(request):
     return HttpResponseRedirect("/accounts/password/change/")
 
+class Counter:
+    count = 0
+
+    def increment(self):
+        self.count += 1
+        return ''
+
+    def decrement(self):
+        self.count -= 1
+        return ''
+
+    def double(self):
+        self.count *= 2
+        return ''
+
 def base(request):
   
     if request.user.is_authenticated:
@@ -27,7 +42,7 @@ def base(request):
     
     
     solicitudAstro,notificaciones=comun()
-    print(notificaciones)
+    
     return render (request,"index.html",{'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 #--------------------  ----------------  ----------------  ----------------  ----------------  ----------------  ----------------  
 def comun():
@@ -38,35 +53,45 @@ def comun():
                 ifSoliAstro = True
                 break
     notificaciones = Notificaciones.objects.all()
+    
    
     return (ifSoliAstro,notificaciones)  
 
 #----------------  ----------------  ----------------  LISTADO ----------------  ----------------  ----------------  
 def observaciones(request):
+    solicitudAstro,notificaciones=comun()
     # observaciones=Observacion.objects.all()
     # observaciones= observaciones.filter(user_id = usuario_registrado)
     # ----las dos lineas anteriores hacen lo mismo que la siguiente ----
     observaciones=Observacion.objects.all().filter(user= request.user.id)
-    return render (request,"observaciones.html",{'observacion':observaciones})
+    return render (request,"observaciones.html",{'observacion':observaciones,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def listado_observaciones(request):
+    solicitudAstro,notificaciones=comun()
     observaciones=Observacion.objects.all()
-    print("holA_listado")
-    return render(request,"listado_observaciones.html",{'observaciones':observaciones})
+    return render(request,"listado_observaciones.html",{'observaciones':observaciones,'solicitudAstro':solicitudAstro,'notificacion':notificacioness})
 
 def ver_observacion(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy() #cogo todo lo que me viene 
     nom_observacion = data['observacion']
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
-    return render(request, 'observacion_show.html', {"form":form,"nom_observacion":nom_observacion})#tambien envio nombre del plato pk me hace falta
+    notificaciones_a_borrar=Notificaciones.objects.all().filter(user=request.user,observacion=observacion)
+    for i in notificaciones_a_borrar:
+        i.delete()
+        
+
+    return render(request, 'observacion_show.html', {"form":form,"nom_observacion":nom_observacion,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})#tambien envio nombre del plato pk me hace falta
 
 def observatorios(request):
+    solicitudAstro,notificaciones=comun()
     observatorios=Observatorio.objects.all().filter(user = request.user.id)
     # observatorios=ObservatorioForm.objects.all().filter(user= usuario_registrado)
-    return render (request,"observatorios.html",{'observatorio':observatorios})
+    return render (request,"observatorios.html",{'observatorio':observatorios,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def inscripciones(request):
+    solicitudAstro,notificaciones=comun()
     OBSERVATORIOS=Observatorio.objects.all().filter(user = request.user.id)
     inscripciones_totales = [] 
     inscripcion = []            #puede ser que en el if me devuelva mas de una, pk un observatorio este inscrito en mas de una observacion
@@ -79,41 +104,44 @@ def inscripciones(request):
                 inscripciones_totales.append(i) 
         else:
             pass
-    return render(request,"inscripciones.html",{'inscripciones':inscripciones_totales})
+    return render(request,"inscripciones.html",{'inscripciones':inscripciones_totales,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
    
 def solicitudAstro(request):
+    solicitudAstro,notificaciones=comun()
     usuarios= Usuario.objects.all().filter(solicitudAstro = True)
-    return render(request,"notificacion_solicitud.html",{'usuario':usuarios})
+    return render(request,"notificacion_solicitud.html",{'usuario':usuarios,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 
 #----------------  ----------------  ----------------  EDICION ----------------  ----------------  ----------------  
 def edit_observaciones(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy() #cogo todo lo que me viene 
     nom_observacion = data['observacion']
     # print(nom_observacion)
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
-    return render(request, 'observaciones_edit.html', {"form":form,"nom_observacion":nom_observacion})#tambien envio nombre del plato pk me hace falta
+    return render(request, 'observaciones_edit.html', {"form":form,"nom_observacion":nom_observacion,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})#tambien envio nombre del plato pk me hace falta
 
 def edit_observatorios(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy() #cogo todo lo que me viene 
     request.session['observatorio_viejo']=data['observatorio'] #creo variable de sesion del observatorio seleccionado para editar y asi evito el enviar y recibir campos ocultos (hidde)con datos  para modificar_observatorio
     # print('----HOLA----')
     observatorio= Observatorio.objects.get(nombre = request.session['observatorio_viejo'])
     form = ObservatorioForm(instance = observatorio )
-    return render(request, 'observatorios_edit.html',{'name_user':user,'form':form} )
+    return render(request, 'observatorios_edit.html',{'name_user':user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones} )
 
 def edit_user(request):
-    print ("----hola----")
+    solicitudAstro,notificaciones=comun()
     # user=Usuario.objects.get(user = usuario_registrado) # PONIENDO USER, me da error y me da todos los id que tiene user en la consola [[ email, emailaddress, first_name, groups, id, image, is_active, is_staff, is_superuser, last_login, last_name, logentry, observacion, observatorio, password, socialaccount, solicitudAstro, tipoUsuario, user_permissions, username ]]
     # user=Usuario.objects.get(id = usuario_registrado)
     # print (user) # user no es iterable
     form =UsuarioChangeForm (instance = request.user)
-    return render(request,'usuarios_edit.html',{'name_user':user,'form':form})
+    return render(request,'usuarios_edit.html',{'name_user':user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def aceptar_notifi_Astro(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy()
-    print(data['notificacion'])
     usuario= Usuario.objects.get(id = data['notificacion'])
     usuario.tipoUsuario='AT'
     usuario.solicitudAstro= False
@@ -133,6 +161,7 @@ def aceptar_notifi_Astro(request):
 
 
 def modificar_observacion(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy() #cogo todo lo que me viene
     if request.method == "POST":
         observacion_vieja = Observacion.objects.get(nombre=data['observacion_vieja']) #cojo el plato con el nombre digamos viejo, para que cuando le demos a guardar, GUARDE TODO LO RECIBIDO EN EL PLATO DIGAMOS YA EXISTENTE, pk imagina que cambiamos el nombre, pues para que no te cree uno nuevo,O QUE AL CAMBIAR EL NOMBRE, EN OTRO CAMPO ME HE EQUIVOCADO y repito, entonces debo tener el nombre viejo, pk aun no he modificado nada
@@ -163,9 +192,10 @@ def modificar_observacion(request):
                 
             return redirect(observaciones)
 
-    return render(request,'observaciones_edit.html',{'form':form,'nom_observacion':data['observacion_vieja']})
+    return render(request,'observaciones_edit.html',{'form':form,'nom_observacion':data['observacion_vieja'],'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
     
 def modificar_observatorio(request):
+    solicitudAstro,notificaciones=comun()
     if request.session['observatorio_viejo']: #ME AHORRO el hacer observatorio_viejo etc como en observaciones
         # data = request.POST.copy() #cogo todo lo que me viene
         if request.method == "POST":
@@ -174,16 +204,17 @@ def modificar_observatorio(request):
             if form.is_valid():
                 form.save()
                 return redirect(observatorios)
-            return render(request,'observatorios_edit.html',{'name_user':request.user,'form':form})
+            return render(request,'observatorios_edit.html',{'name_user':request.user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def modificar_user(request):
+    solicitudAstro,notificaciones=comun()
     if request.method == "POST":
         user_viejo=Usuario.objects.get(id = usuario_registrado)
         form = UsuarioChangeForm(request.POST, request.FILES, instance=user_viejo) #importante request.FILES y poner el enctype <form enctype="multipart/form-data"> para que se modifique la imagen cuando la cambias
         if form.is_valid():
             form.save()
             return redirect(edit_user)
-        return render(request,'usuario_edit.html',{'name_user':request.user,'form':form})
+        return render(request,'usuario_edit.html',{'name_user':request.user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 #----------------  ----------------  ----------------  CREACION ----------------  ----------------  ----------------    
 # IMPORTANTE: al presionar el boton de Añadir...  es metodo GET 
@@ -191,29 +222,27 @@ def modificar_user(request):
 
 
 def crear_observaciones(request):
+    solicitudAstro,notificaciones=comun()
     #la primera vez que entra a qui, como no hay digamos nada(POST), 
     # se va al else: , crea el formulario y redireccionamos
-    print ('hola1')
+    
     if request.method == 'POST':
-        print ('hola3')
         form = ObservacionForm(request.POST)
         if form.is_valid():
-            print ('hola4')
             observacion = form.save(commit=False)# lo que hago con estros tres pasos es decirle que me guarde el usuario logeado 
             observacion.user = user
             observacion.save()
             return redirect(observaciones)
         else:
-            print ('hola5')
             err=form.errors
-            return render(request,'observaciones_register.html',{'form':form,'errors':err})
+            return render(request,'observaciones_register.html',{'form':form,'errors':err,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
     else:
         form = ObservacionForm()
-        print ('hola2')
-    return render(request,'observaciones_register.html',{'form':form})
+        
+    return render(request,'observaciones_register.html',{'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def crear_observatorio(request):
-    
+    solicitudAstro,notificaciones=comun()
     if request.method == 'POST':
         form = ObservatorioForm(request.POST)
         if form.is_valid():
@@ -224,10 +253,10 @@ def crear_observatorio(request):
     else:   
         form = ObservatorioForm(initial={'user':request.user.id})
         
-    return render(request,'observatorios_register.html',{'form':form})
+    return render(request,'observatorios_register.html',{'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def crear_inscripcion(request):
-    # print('------HOLA1-----')
+    solicitudAstro,notificaciones=comun()
     if request.method == 'POST':
         form = InscripcionesForm(request.POST)
         if form.is_valid():
@@ -239,24 +268,27 @@ def crear_inscripcion(request):
         # Lo que digo , es que de  todos los observatorios, solo aparezcan los del propio usuario registrado
         form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
     
-    return render(request,'inscripciones_register.html',{'form':form})
+    return render(request,'inscripciones_register.html',{'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 #----------------  ----------------  ----------------  BORRADO ----------------  ----------------  ----------------  
 def borrar_observaciones(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy()
     request.session['observacion_borrar']=data['observacion']
     return render(request,'observaciones_borrado.html')
 
 def borrar_confirmado_observacion(request):
+    solicitudAstro,notificaciones=comun()
     if request.session['observacion_borrar']:
         observacion=Observacion.objects.get(nombre=request.session['observacion_borrar'])
         observacion.delete()
         return redirect(observaciones)
 
 def borrar_observatorio(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy()
     request.session['observatorio_borrar']= data['observatorio']
-    return render(request,'observatorios_borrado.html')
+    return render(request,'observatorios_borrado.html',{'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def borrar_confirmado_observatorio(request):
     if request.session['observatorio_borrar']:
@@ -265,9 +297,10 @@ def borrar_confirmado_observatorio(request):
         return redirect(observatorios)
 
 def borrar_inscripciones(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy()
     request.session['inscripcion_borrar']= data['inscripcion']
-    return render(request,'inscripciones_borrado.html')
+    return render(request,'inscripciones_borrado.html',{'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def borrar_confirmado_inscripcion(request):
     if request.session['inscripcion_borrar']:
@@ -276,9 +309,10 @@ def borrar_confirmado_inscripcion(request):
         return redirect(inscripciones)
 
 def denegar_notifi_Astro(request):
+    solicitudAstro,notificaciones=comun()
     data = request.POST.copy()
     request.session['notificacion_borrar']=data['notificacion']
-    return render(request,'notificaciones_solicitud_borrado.html')
+    return render(request,'notificaciones_solicitud_borrado.html',{'solicitudAstro':solicitudAstro,'notificacion':notificaciones})
 
 def borrar_confirmado_notifi_Astro(request):
     if request.session['notificacion_borrar']: 

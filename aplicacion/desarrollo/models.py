@@ -97,7 +97,7 @@ class Inscripciones(models.Model):
 class Notificaciones(models.Model):
     id_notificacion = models.AutoField(primary_key=True)
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AF'},on_delete=models.CASCADE)
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     descripcion = models.TextField(blank=True) #indicar que observacion se ha modificado con un texto 
     observacion = models.ForeignKey(Observacion,on_delete=models.CASCADE,null=True, blank=True)
     
