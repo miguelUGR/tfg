@@ -36,7 +36,10 @@ urlpatterns = [
     path('edit_passwd',views.edit_passwd,name='edit_passwd'),
 
     path('listado_observaciones',views.listado_observaciones,name='listado_observaciones'),
+    path('listado_observatorios',views.listado_observatorios,name='listado_observatorios'),
+    path('listado_notificaciones',views.listado_notificaciones,name='listado_notificaciones'),
     path('ver_observacion',views.ver_observacion,name='ver_observacion'),
+    path('ver_observatorio',views.ver_observatorio,name='ver_observatorio'),
 
     path('solicitudAstro',views.solicitudAstro,name='solicitudAstro'),
     path('aceptar_notifi_Astro',views.aceptar_notifi_Astro,name='aceptar_notifi_Astro'),

@@ -3,13 +3,8 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Obsertatorios</h1>
-    <a href="{% url 'crear_observatorio' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-      <span class="icon text-white-50">
-        <i class="fas fa-download fa-sm text-white-50"></i>
-      </span>
-      <span class="text">Añadir Observatorio</span>
-    </a> 
+    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    
 </div>
 {% endblock %}
 
@@ -24,7 +19,7 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observatorios</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observatorios Propios</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -32,53 +27,41 @@
                   <thead>
                     <tr>
                       <th>Nombre</th>
-                      <th>Camara</th>
                       <th>Usuario</th>
-                      <th>Edicion</th>                    
-                      <th>Borrado</th>
+                      <th>Ver_Completo</th>
+                      
+                      
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
                       <th>Nombre</th>
-                      <th>Camara</th>
                       <th>Usuario</th>
-                      <th>Edicion</th>
-                      <th>Borrado</th>
+                      <th>Ver_Completo</th>
+                      
+
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if observatorio %}
-                        {% for i in observatorio %}
+                    {% if observatorios %}
+                        {% for i in observatorios %}
                         <tr>
                         <td>{{i.nombre}}</td>
-                        <td>{{i.camara}}</td>
                         <td>{{i.user}}</td>
                         
                         <td>
-                            <form method="POST"  action="{% url 'editar_observatorio' %}">{% csrf_token %}
+                            <form method="POST"  action="{% url 'ver_observatorio' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-check"></i>
                                     </span>
-                                    <span class="text">Editar</span>
-                                    
-                                </button> 
+                                    <span class="text">Ver</span>
+                                </button>
+                                   
                                 <input type="hidden" name="observatorio" value="{{i.nombre}}">
                             </form> 
                         </td>
-                        <td>
-                            <form method="POST"  action="{% url 'borrar_observatorio' %}">{% csrf_token %}
-                                <button   class="btn btn-danger btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-check"></i>
-                                    </span>
-                                    <span class="text">Borrar</span>
-                                    
-                                </button>  
-                                <input type="hidden" name="observatorio" value="{{i.nombre}}">
-                            </form>
-                        </td>
+                        
                                 
                         </tr>
                         

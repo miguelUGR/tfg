@@ -3,7 +3,7 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Observaciones</h1>
+    <h1 class="h3 mb-0 text-gray-800">Notificaciones</h1>
     
 </div>
 {% endblock %}
@@ -19,39 +19,39 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabla de Observaciones</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Tabla de Notificacioness</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Fecha Observacion</th>
                       <th>Usuario</th>
+                      <th>Fecha Notificacion</th>
+                      <th>Descricion</th>
+                      <th>Observacion</th>
                       <th>Ver_Completo</th>
-                      
                       
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Fecha Observacion</th>
                       <th>Usuario</th>
+                      <th>Fecha Notificacion</th>
+                      <th>Descripcion</th>
+                      <th>Observacion</th>
                       <th>Ver_Completo</th>
-                      
 
                     </tr>
                   </tfoot>
                   <tbody>
-                    {% if observaciones %}
-                        {% for i in observaciones %}
+                    {% if notificaciones %}
+                        {% for i in notificaciones %}
                         <tr>
-                        <td>{{i.nombre}}</td>
-                        <td>{{i.fecha_observacion}}</td>
                         <td>{{i.user}}</td>
-                        
+                        <td>{{i.date}}</td>
+                        <td>{{i.descripcion}}</td>
+                        <td>{{i.observacion}}</td>
                         <td>
                             <form method="POST"  action="{% url 'ver_observacion' %}">{% csrf_token %}
                                 <button   class="btn btn-success btn-icon-split">
@@ -61,7 +61,7 @@
                                     <span class="text">Ver</span>
                                 </button>
                                    
-                                <input type="hidden" name="observacion" value="{{i.nombre}}">
+                                <input type="hidden" name="observacion" value="{{i.observacion.nombre}}">
                             </form> 
                         </td>
                         

@@ -434,7 +434,7 @@ hr {
 
 small,
 .small {
-  font-size: 80%;
+  font-size: 90%;
   font-weight: 400;
 }
 
@@ -1247,8 +1247,8 @@ pre code {
     max-width: 25%;
   }
   .col-xl-4 {
-    flex: 0 0 33.33333%;
-    max-width: 33.33333%;
+    flex: 0 0 48.33333%;
+    max-width: 48.33333%;
   }
   .col-xl-5 {
     flex: 0 0 41.66667%;

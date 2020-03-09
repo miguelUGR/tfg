@@ -7,11 +7,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="">
   <meta name="author" content="">
-  {% block cabeza %}
-
-  {% endblock %}
-  <title>SB Admin 2 - Dashboard</title>
   
+  <title>SB Admin 2 - Dashboard</title>
+  <!-- PARA LOS MAPAS-->
+  <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <style>
+    .map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+  <!-- /PARA LOS MAPAS/-->
   {% load static %} 
     
 
@@ -26,12 +34,12 @@
     <!-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> -->
     <link  href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet" media="screen">
     <link  href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-    
+    <script src="{% static 'js/funciones.js'%}"></script>
 
     
 </head>
 
-<body id="page-top">
+<body onload=""id="page-top">
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -67,6 +75,21 @@
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Listado</span></a>
       </li>
+      {% if request.user.tipoUsuario == "AF" %}
+            <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Observatorio Propios
+      </div>
+      <!-- Nav Item - Charts -->
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'listado_observatorios' %}">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Listar</span></a>
+      </li>
+      {% endif %}
       <!-- Divider -->
       <hr class="sidebar-divider">
 
@@ -223,15 +246,13 @@
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
                 
-                {% if solicitudAstro == True and request.user.tipoUsuario == "AT" %}
-                  <span class="badge badge-danger badge-counter">1+</span>
-                {% endif %} 
                 
-                {% for i in notificacion %}
-                  {% if i.user == request.user %} 
-                  <span class="badge badge-danger badge-counter">1+</span>
-                  {% endif %}
-                {% endfor %}
+                {% if contador > 0 %}
+                  <span class="badge badge-danger badge-counter">{{contador}}+</span>
+                {% else %} 
+                  <span class="badge badge-danger badge-counter"></span>
+                {% endif %}  
+                
               </a>
               <!-- Dropdown - Alerts -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -253,10 +274,8 @@
                 </a>
               {% endif %} 
               
-              {% for i in notificacion %}
-                
-                {% if i.user == request.user %} 
-                
+              {% for i in notificacion|slice:":5" %}
+  
                 <form method="POST"  action="{% url 'ver_observacion' %}" >{% csrf_token %}
                   <button class="dropdown-item d-flex align-items-center"> 
                   <div class="mr-3">
@@ -272,12 +291,10 @@
                 </button>
                   <input type="hidden" name="observacion" value="{{i.observacion.nombre}}">
                 </form> 
-                
-                {% endif %}
 
               {% endfor %}
               
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                <a class="dropdown-item text-center small text-gray-500" href="{% url 'listado_notificaciones' %}">Show All Alerts</a>
               </div>
             </li>
 

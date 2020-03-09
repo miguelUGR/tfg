@@ -136,8 +136,8 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-#LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'en-us' #Lo pongo en ingles por problemas de nº con comas(40,0239), que lo quiero con puntos(40.0239) en los modelos
+# LANGUAGE_CODE = 'es-es' 
 TIME_ZONE = 'UTC'
 
 USE_I18N = True

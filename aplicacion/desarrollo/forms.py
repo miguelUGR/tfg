@@ -55,7 +55,7 @@ class ObservacionForm(forms.ModelForm):
 class ObservatorioForm(forms.ModelForm):
     class Meta:
         model = Observatorio
-        fields = ('nombre','camara','apertura','filtros','latitude','longitude','distanciaFocal',) 
+        fields = ('nombre','camara','apertura','filtros','latitude','longitude','distanciaFocal','radioMovilidad',) 
 
 class InscripcionesForm(forms.ModelForm):
     class Meta:

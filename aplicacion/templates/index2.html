@@ -1,69 +1,106 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Static Example</title>
-
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-  <!-- XDSoft DateTimePicker -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
-</head>
+  <head>
+    {% block head %}
+    <title>{% block title %} Bienvenido {% endblock %}</title>
+    {% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    
+    <!-- En todas las imagenes la ruta ya no es ../static/imagen , si no que es: /static/imagen -->
+    <!--Para los mapas de la practica 8 tengo que añadir esto-->
+    <!-- PARA LOS MAPAS-->
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    
+<style>
+  .map {
+    height: 400px;
+    width: 100%;
+  }
+</style>
+<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    {% load static %} 
+        <!-- <link  href="{% static 'estilo.css' %}" rel="stylesheet" media="screen">
+        <script src="{% static 'js/jquery-3.3.1.min.js'%}"></script> -->
+        <script src="{% static 'js/funciones.js'%}"></script>
+    
+    <meta charset="UTF-8">
+    
+</head> 
 <body>
-  <div class="container-fluid">
+  
+  <legend>MAPA DE GRANADA:</legend>
+                <!-- <p id="Cord">{{coord}}</p> -->
+                <div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
+                  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+                        <div id="map" class="map"></div>
+                        
+                        <script type="text/javascript">
+                          var lon = "{{longuitud}}"; //[-73.8786113 , quito el [
+                          var lat = "{{latitud}}";//40.8502883] , quito el ]
+                          
+                    
+                          var map = new ol.Map({
+                            target: 'map',
+                            layers: [
+                              new ol.layer.Tile({
+                                source: new ol.source.OSM()
+                              })
+                            ],
+                            view: new ol.View({
+                              center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
+                              zoom: 9
+                            })
+                          });
+                          window.onload = function() {
+                            add_map_point(lon,lat);
+                          };
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Añadir</h1>
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-      <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Añadir Observaciones</h6>
-        {% if form.errors %}
-          <!-- Error messaging -->
-          <div >
-            <div>
-              <p>Hay algunos errores de informacion. corrija los siguientes errores</p>
-              <ul>
-                {% for field in form %}
-                  {% if field.errors %}<li>{{ field.label }}: {{ field.errors|striptags }}</li>{% endif %}
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-          <!-- /Error messaging -->
-        {% endif %}
-      </div>
-      <div id="id_date" class="card-body">
-        <form method="POST" enctype='multipart/form-data' autocomplete="off" >{% csrf_token %}
-          {{ form.as_p}}
-          <a href="{% url 'observacion' %}" class="btn btn-info btn-icon-split">
-            <span class="icon text-white-50">
-              <i class="fas fa-info-circle"></i>
-            </span>
-            <span class="text">Volver Atras</span>
-          </a>
-          <button class="btn btn-success btn-circle btn-lg" type="submit" >Save</button>
-      </form>
-    </div>
-  </div>
-  <input id="pep" type="text">
+                  // var baseLayer = new ol.layer.Tile({
+                  //   source: new ol.source.OSM()
+                  // });
 
-  <script>
-    $(function () {
-    $("#id_hora_inicio").datetimepicker({
-      format: 'd/m/Y H:i',
-    });
-    $("#id_hora_final").datetimepicker({
-      format: 'd/m/Y H:i',
-    });
-    $("#pep").datetimepicker({
-      format: 'd/m/Y H:i',
-    });
-  });
-  </script>
+                  // var circle = new ol.geom.Circle(ol.proj.transform([parseFloat(lon), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857'), 10000);
+                  // var CircleFeature = new ol.Feature(circle);
+                  // var vectorSource = new ol.source.Vector({
+                  //   projection: 'EPSG:4326',
+                  // });
 
+                  // vectorSource.addFeatures([CircleFeature]); //añadimos la figura
+
+                  // var layer = new ol.layer.Vector({
+                  //     source: vectorSource,
+                  //     style: [
+                  //     new ol.style.Style({
+                  //         stroke: new ol.style.Stroke({
+                  //             color: 'blue',
+                  //             width: 3
+                  //         }),
+                  //         fill: new ol.style.Fill({
+                  //             color: 'rgba(0, 0, 255, 0.1)'
+                  //         })
+                  //     })]
+                  // });
+
+                  // var map = new ol.Map({
+                  //     layers: [baseLayer, layer],
+                  //     target: 'map',
+                  //     view: new ol.View({
+                  //         center: ol.proj.transform([-3.59, 37.18], 'EPSG:4326', 'EPSG:3857'),
+                  //         zoom: 9        
+                  //     }),
+                  //     units: 'm'
+                  // });
+                        </script>
+                   
+                   
+                    <!-- <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-3.6276394128799443%2C37.1949759077155%2C-3.618680834770203%2C37.19880460126361&amp;layer=mapnik" style="border: 1px solid black"></iframe><br/><small><a href="https://www.openstreetmap.org/#map=18/37.19689/-3.62316">Ver mapa más grande</a></small> -->
+                </div>
+              
+     
 </body>
 </html>
