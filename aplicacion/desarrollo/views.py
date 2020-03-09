@@ -69,7 +69,7 @@ def listado_observatorios(request):
 
 def listado_notificaciones(request):
     solicitudAstro,notificaciones,contador=comun(request)
-    return render(request,"listado_notificaciones.html",{'solicitudAstro':solicitudAstro,'notificaciones':notificaciones,'contador':contador})
+    return render(request,"listado_notificaciones.html",{'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
 
 def ver_observacion(request):
     data = request.POST.copy() #cogo todo lo que me viene 
