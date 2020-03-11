@@ -42,7 +42,7 @@
                         <script type="text/javascript">
                           var lon = "{{longuitud}}"; //[-73.8786113 , quito el [
                           var lat = "{{latitud}}";//40.8502883] , quito el ]
-                          
+                          var radio= "{{radio}}" 
                     
                           var map = new ol.Map({
                             target: 'map',
@@ -57,9 +57,9 @@
                             })
                           });
                           window.onload = function() {
-                            add_map_point(lon,lat);
+                            add_map_point(lon,lat,radio);
                           };
-
+                          
                   // var baseLayer = new ol.layer.Tile({
                   //   source: new ol.source.OSM()
                   // });
