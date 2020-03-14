@@ -82,11 +82,12 @@ def ver_observacion(request):
     
     longuitud= observacion.longitude
     latitud= observacion.latitude 
-    
+    nombre = observacion.nombre
     print("logintud=",longuitud)
     print("latitud=",latitud)
+    print("Nombre=",nombre)
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud})
+    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'nombre':nombre})
 
 def ver_observatorio(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -96,11 +97,28 @@ def ver_observatorio(request):
     
     longuitud= observatorio.longitude
     latitud= observatorio.latitude 
+    nombre=observatorio.nombre
     radio=observatorio.radioMovilidad
     print("logintud=",longuitud)
     print("latitud=",latitud)
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observatorio_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'radio':radio})
+    return render(request, 'observatorio_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'radio':radio,'nombre':nombre})
+
+
+def ver_observatorio_all(request):
+    observatorios=Observatorio.objects.all().filter(user= request.user.id)
+    print("VAMOS A IMPRIMIR")
+    datos = [] 
+    for i in observatorios:
+        
+        dato=[i.longitude,i.latitude,i.radioMovilidad,i.nombre]
+        # dato=[{"longitud":i.longitude,"latitude":i.latitude,"radio":i.radioMovilidad}]
+    
+        datos.append(dato)
+    
+    print(len(datos)) #Para saber cuantos datos tiene LA LISTA
+    solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
+    return render(request, 'observatorio_show_all.html', {'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos})
 
 
 def observatorios(request):
@@ -200,11 +218,15 @@ def modificar_observacion(request):
                     observatorio.append(i.observatorios)
                   
                 for i in observatorio:#Cojo todos los usuarios eliminando repetido(puede dar el caso, usuario con mas de un observatorio en la misma observacion)
-                    # print("usuario = ",i.user)
                        if i.user not in user:  # elimino repetidos, para no generar notificaciones repetidas
                            user.append(i.user)
                 for i in user:
-                    # print("UsuariosNo = ", i) 
+                   # Antes de meter notificaciones, tengo que eliminar la o las anteriores. (no deberia de haber mas de una, pk pretendo eliminarlas)
+                    if Notificaciones.objects.filter(user=i,observacion=observacion_vieja).exists(): #esto petaria si hay mas de una, pero no debe de haber (PUES NO PETA)
+                        print("--PROCEDEMOS A ELIMINAR--")
+                        notificacion_eliminar=Notificaciones.objects.filter(user=i,observacion=observacion_vieja)
+                        notificacion_eliminar.delete() # Hemos podido elimiar mas de una a la vez
+
                     new_notificacion=Notificaciones(user=i,descripcion="Modificacion de Observacion",observacion=observacion_vieja)
                     new_notificacion.save()
 

@@ -274,7 +274,7 @@
                 </a>
               {% endif %} 
               
-              {% for i in notificacion|slice:":5" %}
+               {% for i in notificacion|slice:":5" %} <!-- iteracion maximo 5 -->
   
                 <form method="POST"  action="{% url 'ver_observacion' %}" >{% csrf_token %}
                   <button class="dropdown-item d-flex align-items-center"> 

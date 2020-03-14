@@ -1,0 +1,87 @@
+{% extends "index.html" %}
+
+{% block pagina %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Observatorio</h1>
+</div>
+{% endblock %}
+
+
+
+{% block listado %}
+
+{% endblock %}
+
+
+
+
+
+{% block secundario %}
+<div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
+  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+  <div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Mapa de mi Observatorio</h6>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      
+          <div  id="map" class="map"></div>
+          <script type="text/javascript">
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                  new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                  })
+                ],
+                view: new ol.View({
+                  center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
+                  zoom: 9
+                })
+              });
+          </script>
+          <div style="text-align: center;">
+            <br>
+            <a href="{% url 'listado_observatorios' %}" class="btn btn-info btn-icon-split">
+              <span class="icon text-white-50">
+                <i class="fas fa-info-circle"></i>
+              </span>
+              <span class="text">Volver Atras</span>
+            </a>
+          </div>
+         
+          {% for i in datos %}
+              
+              <script type="text/javascript">
+                var lon = "{{i.0}}"; //[-73.8786113 , quito el [
+                var lat = "{{i.1}}";//40.8502883] , quito el ]
+                var radio= "{{i.2}}";
+                var nombre = "{{i.3}}";
+                  // TENGO QUE QUITAR EL: window.onload = function() {} pk no me muestra los 3 puntos, pk espera a que todo este cargado y solo muestra el ultimo
+                add_map_point(lon,lat,radio,nombre);
+                
+                
+              </script>
+            {% endfor %}
+          
+          <br>
+          
+          <!-- <a class="btn btn-secondary btn-icon-split" onclick="add_map_point(lon,lat)">
+            <span class="icon text-white-50">
+              <i class="fas fa-arrow-right"></i>
+            </span>
+            <span style="color: seashell;" class="text">Mostrar Ubicacion</span>
+          </a>                 -->
+                        
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+

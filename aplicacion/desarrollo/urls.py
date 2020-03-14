@@ -40,6 +40,7 @@ urlpatterns = [
     path('listado_notificaciones',views.listado_notificaciones,name='listado_notificaciones'),
     path('ver_observacion',views.ver_observacion,name='ver_observacion'),
     path('ver_observatorio',views.ver_observatorio,name='ver_observatorio'),
+    path('ver_observatorio_all',views.ver_observatorio_all,name='ver_observatorio_all'),
 
     path('solicitudAstro',views.solicitudAstro,name='solicitudAstro'),
     path('aceptar_notifi_Astro',views.aceptar_notifi_Astro,name='aceptar_notifi_Astro'),
