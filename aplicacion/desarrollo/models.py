@@ -39,8 +39,8 @@ class Observatorio(models.Model):
     camara = models.CharField(max_length=50,blank = False)# blank=False es para que por narices metamos un numero, si lo ponemos a True, indicamos que puede meterse campo vacio
     apertura = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],blank= False) 
     filtros = models.CharField(max_length=50,blank = False)
-    latitude = models.DecimalField(max_digits=100, decimal_places=10)
-    longitude = models.DecimalField(max_digits=100, decimal_places=10)
+    latitude = models.DecimalField(max_digits=100, decimal_places=16)
+    longitude = models.DecimalField(max_digits=100, decimal_places=16)
     distanciaFocal = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],blank= False) 
     radioMovilidad = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(900000)],blank= False)
     user = models.ForeignKey(Usuario,on_delete=models.CASCADE)
@@ -51,8 +51,8 @@ class Observatorio(models.Model):
 class Observacion(models.Model):
     nombre = models.CharField(max_length=150,blank = False,unique=True)
     fecha_observacion= models.DateField() 
-    latitude = models.DecimalField(max_digits=100, decimal_places=10)
-    longitude = models.DecimalField(max_digits=100, decimal_places=10)
+    latitude = models.DecimalField(max_digits=100, decimal_places=16)
+    longitude = models.DecimalField(max_digits=100, decimal_places=16)
     duracion_ocultacion = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)],blank= False) 
     hora_inicio = models.DateTimeField(null=True, blank=True) #indico que puedes meter nulo 
     hora_final = models.DateTimeField(null=True, blank=True)

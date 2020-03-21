@@ -102,7 +102,59 @@ var modifyInteraction = makeMovable(marker);
 map.addInteraction(modifyInteraction);
 
 
+
+// var popup = new ol.Overlay.Popup();
+// map.addOverlay(popup);
+// popup.show(evt.coordinate, '<div><h2>Coordinates</h2><p>' + coor + '</p></div>');
 }
+
+
+
+
+
+
+
+function observaciones()
+{
+    //------------------------------------POLYGON-----------------------------------------------------------------------------------------------------------------
+
+// A ring must be closed, that is its last coordinate
+// should be the same as its first coordinate.
+
+var ring = [
+    //      [0]                     [1]                     [2]                   [3]                     [4]   
+    [-8.944501, 37.01262],[0.224361,38.7532131],[0.77489,37.5994],[ -8.83798,35.8064677], [-8.944501, 37.01262]
+];
+  
+// A polygon is an array of rings, the first ring is
+// the exterior ring, the others are the interior rings.
+// In your case there is one ring only.
+var polygon = new ol.geom.Polygon([ring]);
+
+// Create feature with polygon.
+var feature = new ol.Feature(polygon);
+polygon.transform('EPSG:4326', 'EPSG:3857');
+// Create vector source and the feature to it.
+var vectorSource = new ol.source.Vector();
+vectorSource.addFeature(feature);
+
+// Create vector layer attached to the vector source.
+var vectorLayer = new ol.layer.Vector({
+  source: vectorSource,
+  style: new ol.style.Style({
+     fill: new ol.style.Fill({ color: 'rgba(255, 255, 0, 0.2)', weight: 8 }),  //no que lo rellene
+    stroke: new ol.style.Stroke({ color: '#ff0000', width: 3 })
+})
+});
+
+// Add the vector layer to the map.
+map.addLayer(vectorLayer);
+
+}
+
+
+
+
 
 
 

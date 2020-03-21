@@ -72,22 +72,32 @@ def listado_notificaciones(request):
     return render(request,"listado_notificaciones.html",{'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
 
 def ver_observacion(request):
+    usuario_registrado=request.user
     data = request.POST.copy() #cogo todo lo que me viene 
     nom_observacion = data['observacion']
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
+    # -------- Notificaciones ----------
     notificaciones_a_borrar=Notificaciones.objects.all().filter(user=request.user,observacion=observacion)
     for i in notificaciones_a_borrar:
         i.delete()
-    
+    #-----------  Fin  ---------------
     longuitud= observacion.longitude
     latitud= observacion.latitude 
     nombre = observacion.nombre
-    print("logintud=",longuitud)
-    print("latitud=",latitud)
-    print("Nombre=",nombre)
+
+    datos = [] 
+    if usuario_registrado.tipoUsuario == "AT":
+        print("Somos SUPER USER")
+        inscripciones= Inscripciones.objects.all().filter(observaciones=observacion)
+        for i in inscripciones:
+            
+            dato=[i.observatorios.longitude,i.observatorios.latitude,i.observatorios.radioMovilidad,i.observatorios.nombre]
+            print(dato)
+            datos.append(dato)
+        
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'nombre':nombre})
+    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'nombre':nombre,'datos':datos})
 
 def ver_observatorio(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -166,7 +176,13 @@ def edit_observatorios(request):
     # print('----HOLA----')
     observatorio= Observatorio.objects.get(nombre = request.session['observatorio_viejo'])
     form = ObservatorioForm(instance = observatorio )
-    return render(request, 'observatorios_edit.html',{'name_user':user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador} )
+    longuitud= observatorio.longitude
+    latitud= observatorio.latitude 
+    nombre=observatorio.nombre
+    radio=observatorio.radioMovilidad
+    
+    return render(request, 'observatorios_edit.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'radio':radio,'nombre':nombre})
+
 
 def edit_user(request):
     solicitudAstro,notificaciones,contador=comun(request)

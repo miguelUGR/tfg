@@ -12,7 +12,7 @@
 
 {% block listado %}
 <!-- Begin Page Content -->
-        <div class="container-fluid">
+        <div style="width: 50%; margin-left: 0; margin-right: 0;" class="container-fluid">
 
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Añadir</h1>
@@ -37,6 +37,87 @@
 
         </div>
         <!-- /.container-fluid -->
+{% endblock %}
+
+
+{% block secundario %}
+<div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
+  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+  <div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Mapa de mi Observatorio</h6>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      
+      <div id="map" class="map"></div>
+      <div id="popup"></div>
+
+          <script type="text/javascript">
+            
+            var map = new ol.Map({
+              target: 'map',
+              layers: [
+                new ol.layer.Tile({
+                  source: new ol.source.OSM()
+                })
+              ],
+              view: new ol.View({
+                center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
+                zoom: 9
+              })
+            });
+            
+            map.on('singleclick', function (evt) {
+              if (vectorLayer)
+              {
+                vectorLayer.clear();
+              }
+                  // console.log(evt.coordinate);
+            
+              if (map.getLayers().getLength() > 1) {
+                map.getLayers().pop();
+              }
+              // convert coordinate to EPSG-4326  id_latitude   id_longitude
+              var coor=ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+              // console.log(coor);
+              document.getElementById("id_latitude").value=coor[1];
+              document.getElementById("id_longitude").value=coor[0];
+              //------- CREO EL PUNTO---
+              var vectorLayer = new ol.layer.Vector({
+              source:new ol.source.Vector({
+              features: [new ol.Feature({
+              geometry: new ol.geom.Point(ol.proj.transform([parseFloat(coor[0]), parseFloat(coor[1])], 'EPSG:4326', 'EPSG:3857')), // Esas cordenadas se las pongo a mano, que es donde estan todos los restaurantes, en NEW YORK,ojo con el orden de lat y lng
+              })]
+              }),
+              style: new ol.style.Style({
+              image: new ol.style.Icon({
+              anchor: [0.5, 0.5],
+              anchorXUnits: "fraction",
+              anchorYUnits: "fraction",
+              src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
+              })
+              })
+              });
+
+      
+               map.addLayer(vectorLayer);
+              // map.getLayers().item(1).getSource().clear(); //elimina el iten 1
+               
+              
+                
+            });
+            
+          </script>
+          <br>
+           
+    </div>
+  </div>
+</div>
+
+
+
 {% endblock %}
 
 

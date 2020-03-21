@@ -80,9 +80,23 @@
               })
             });
             window.onload = function() {
-              add_map_point(lon,lat,0,nombre);
+              observaciones();
             };
           </script>
+
+          {% for i in datos %}
+                        
+          <script type="text/javascript">
+            var lon = "{{i.0}}"; //[-73.8786113 , quito el [
+            var lat = "{{i.1}}";//40.8502883] , quito el ]
+            var radio= "{{i.2}}";
+            var nombre = "{{i.3}}";
+              // TENGO QUE QUITAR EL: window.onload = function() {} pk no me muestra los 3 puntos, pk espera a que todo este cargado y solo muestra el ultimo
+            add_map_point(lon,lat,radio,nombre);
+            
+            
+          </script>
+          {% endfor %}
           <br>
           
           <!-- <a class="btn btn-secondary btn-icon-split" onclick="add_map_point(lon,lat)">

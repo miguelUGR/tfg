@@ -60,7 +60,8 @@
     <!-- Card Body -->
     <div class="card-body">
       
-          <div  id="map" class="map"></div>
+      <div id="map" class="map"><div id="info"></div></div> 
+      
           
           <script type="text/javascript">
           
@@ -68,6 +69,7 @@
             var lat = "{{latitud}}";
             var radio= "{{radio}}";
             var nombre= "{{nombre}}";
+            console.log(lon);
             var map = new ol.Map({
               target: 'map',
               layers: [

@@ -102,3 +102,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+aplicacion/desarrollo/forms.py
