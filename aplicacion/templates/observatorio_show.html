@@ -60,7 +60,7 @@
     <!-- Card Body -->
     <div class="card-body">
       
-      <div id="map" class="map"><div id="info"></div></div> 
+      <div id="map" class="map">
       
           
           <script type="text/javascript">
@@ -74,9 +74,29 @@
               target: 'map',
               layers: [
                 new ol.layer.Tile({
-                  source: new ol.source.OSM()
+                  // This illustrates a custom tiles source but for using
+                  // official OpenStreetMap server new ol.source.OSM()
+                  // instead of new ol.source.XYZ(...) is enough
+                  source: new ol.source.XYZ({
+                    attributions: [
+                    ol.source.OSM.ATTRIBUTION,
+                      'Tiles courtesy of ' +
+                      '<a href="http://openstreetmap.org">' +
+                      'OpenStreetMap' +
+                      '</a>'
+                    ],
+                    url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+                  })
                 })
               ],
+              controls: ol.control.defaults({
+                // Set to display OSM attributions on the bottom right control
+                attributionOptions:  {
+                  collapsed: false
+                }
+              }).extend([
+                new ol.control.ScaleLine() // Add scale line to the defaults controls
+              ]),
               view: new ol.View({
                 center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
                 zoom: 9

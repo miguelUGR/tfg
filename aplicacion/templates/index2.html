@@ -14,7 +14,9 @@
     <!--Para los mapas de la practica 8 tengo que añadir esto-->
     <!-- PARA LOS MAPAS-->
     <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    
+    
     
 <style>
   .map {
@@ -22,12 +24,12 @@
     width: 100%;
   }
 </style>
-<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+
     {% load static %} 
         <!-- <link  href="{% static 'estilo.css' %}" rel="stylesheet" media="screen">
         <script src="{% static 'js/jquery-3.3.1.min.js'%}"></script> -->
         <script src="{% static 'js/funciones.js'%}"></script>
-    
+        
     <meta charset="UTF-8">
     
 </head> 
@@ -38,6 +40,10 @@
                 <div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
                   <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
                         <div id="map" class="map"></div>
+                        <div id="popup" class="ol-popup">
+                          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                          <div id="popup-content"></div>
+                        </div>
                         
                         <script type="text/javascript">
                           var lon = "{{longuitud}}"; //[-73.8786113 , quito el [
@@ -56,45 +62,63 @@
                               zoom: 9
                             })
                           });
-                          window.onload = function() {
-                            add_map_point(lon,lat,radio);
-                          };
                           
-                  // var baseLayer = new ol.layer.Tile({
-                  //   source: new ol.source.OSM()
-                  // });
 
-                  // var circle = new ol.geom.Circle(ol.proj.transform([parseFloat(lon), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857'), 10000);
-                  // var CircleFeature = new ol.Feature(circle);
-                  // var vectorSource = new ol.source.Vector({
-                  //   projection: 'EPSG:4326',
-                  // });
+                          
 
-                  // vectorSource.addFeatures([CircleFeature]); //añadimos la figura
+                        add_map_point(lon,lat,radio);
+                        
+                        var container = document.getElementById('popup');
+                        var content = document.getElementById('popup-content');
+                        var closer = document.getElementById('popup-closer');
 
-                  // var layer = new ol.layer.Vector({
-                  //     source: vectorSource,
-                  //     style: [
-                  //     new ol.style.Style({
-                  //         stroke: new ol.style.Stroke({
-                  //             color: 'blue',
-                  //             width: 3
-                  //         }),
-                  //         fill: new ol.style.Fill({
-                  //             color: 'rgba(0, 0, 255, 0.1)'
-                  //         })
-                  //     })]
-                  // });
+                        
 
-                  // var map = new ol.Map({
-                  //     layers: [baseLayer, layer],
-                  //     target: 'map',
-                  //     view: new ol.View({
-                  //         center: ol.proj.transform([-3.59, 37.18], 'EPSG:4326', 'EPSG:3857'),
-                  //         zoom: 9        
-                  //     }),
-                  //     units: 'm'
-                  // });
+                        var overlay = new ol.Overlay({
+                          element: container,
+                          autoPan: true,
+                          autoPanAnimation: {
+                            duration: 250
+                          }
+                        });
+                        
+                        map.addOverlay(overlay);
+                        closer.onclick = function() {
+                          overlay.setPosition(undefined);
+                          closer.blur();
+                          return false;
+                        };
+
+                        
+
+                        map.on('singleclick', function(evt) {
+                          var coordinate = evt.coordinate;
+                          var hdms = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+                          content.innerHTML = '<code>' + hdms +
+                              '</code>';
+                          overlay.setPosition(coordinate);
+                          if (map.getLayers().getLength() > 1) {
+                            map.getLayers().pop();
+                          }
+                          var vectorLayer = new ol.layer.Vector({
+                          source:new ol.source.Vector({
+                          features: [new ol.Feature({
+                          geometry: new ol.geom.Point(ol.proj.transform([parseFloat(hdms[0]), parseFloat(hdms[1])], 'EPSG:4326', 'EPSG:3857')), // Esas cordenadas se las pongo a mano, que es donde estan todos los restaurantes, en NEW YORK,ojo con el orden de lat y lng
+                          })]
+                          }),
+                          style: new ol.style.Style({
+                          image: new ol.style.Icon({
+                          anchor: [0.5, 0.5],
+                          anchorXUnits: "fraction",
+                          anchorYUnits: "fraction",
+                          src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
+                          })
+                          })
+                          });
+
+                  
+                          map.addLayer(vectorLayer);
+                        });
                         </script>
                    
                    
