@@ -29,6 +29,7 @@
         <!-- <link  href="{% static 'estilo.css' %}" rel="stylesheet" media="screen">
         <script src="{% static 'js/jquery-3.3.1.min.js'%}"></script> -->
         <script src="{% static 'js/funciones.js'%}"></script>
+        <link rel="stylesheet" href="{% static 'mapas/css/mapa.css' %}" type="text/css">
         
     <meta charset="UTF-8">
     
@@ -42,82 +43,58 @@
                         <div id="map" class="map"></div>
                         <div id="popup" class="ol-popup">
                           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                          <div id="popup-content"></div>
+                          <div id="popup-content">Este es el <a href="javascript:;">texto</a> del bocadillo</div>
                         </div>
                         
                         <script type="text/javascript">
                           var lon = "{{longuitud}}"; //[-73.8786113 , quito el [
                           var lat = "{{latitud}}";//40.8502883] , quito el ]
                           var radio= "{{radio}}" 
-                    
-                          var map = new ol.Map({
-                            target: 'map',
-                            layers: [
-                              new ol.layer.Tile({
-                                source: new ol.source.OSM()
-                              })
-                            ],
-                            view: new ol.View({
-                              center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
-                              zoom: 9
-                            })
-                          });
-                          
 
-                          
+                          var popup = document.getElementById('popup');
+                          var contenidoPopup = document.getElementById('popup-content');
+                          var botonCerrarPopup = document.getElementById('popup-closer');
 
-                        add_map_point(lon,lat,radio);
+                          /**
+                           * Se crea una "sobrecapa" (overlay) para el popup
+                           */
+                            var overlay = new ol.Overlay({
+                              element: popup,
+                              autoPan: true,
+                              autoPanAnimation: {
+                                duration: 250
+                              }
+                            });
+
+                           /**
+                             * Codigo para ocultar el popup cuando se pulse en la cruz
+                             * @return {boolean} Don't follow the href.
+                            */
                         
-                        var container = document.getElementById('popup');
-                        var content = document.getElementById('popup-content');
-                        var closer = document.getElementById('popup-closer');
-
-                        
-
-                        var overlay = new ol.Overlay({
-                          element: container,
-                          autoPan: true,
-                          autoPanAnimation: {
-                            duration: 250
-                          }
-                        });
-                        
-                        map.addOverlay(overlay);
-                        closer.onclick = function() {
+                        botonCerrarPopup.onclick = function() {
                           overlay.setPosition(undefined);
-                          closer.blur();
+                          botonCerrarPopup.blur();
                           return false;
                         };
 
+                        var map=mapa(overlay);
+                 
+                        add_map_point(lon,lat,radio);
                         
+                        
+                        
+                      
 
                         map.on('singleclick', function(evt) {
                           var coordinate = evt.coordinate;
                           var hdms = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-                          content.innerHTML = '<code>' + hdms +
+                          contenidoPopup.innerHTML = 'Coordenadas:<code>' + '<p>'+hdms[0]+'<br>'+ hdms[1]+'</p> '
                               '</code>';
                           overlay.setPosition(coordinate);
-                          if (map.getLayers().getLength() > 1) {
-                            map.getLayers().pop();
-                          }
-                          var vectorLayer = new ol.layer.Vector({
-                          source:new ol.source.Vector({
-                          features: [new ol.Feature({
-                          geometry: new ol.geom.Point(ol.proj.transform([parseFloat(hdms[0]), parseFloat(hdms[1])], 'EPSG:4326', 'EPSG:3857')), // Esas cordenadas se las pongo a mano, que es donde estan todos los restaurantes, en NEW YORK,ojo con el orden de lat y lng
-                          })]
-                          }),
-                          style: new ol.style.Style({
-                          image: new ol.style.Icon({
-                          anchor: [0.5, 0.5],
-                          anchorXUnits: "fraction",
-                          anchorYUnits: "fraction",
-                          src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
-                          })
-                          })
-                          });
-
-                  
-                          map.addLayer(vectorLayer);
+                          // if (map.getLayers().getLength() > 1) {
+                          //   map.getLayers().pop();
+                          // }
+                          
                         });
                         </script>
                    

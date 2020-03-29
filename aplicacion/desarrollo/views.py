@@ -82,6 +82,7 @@ def ver_observacion(request):
     for i in notificaciones_a_borrar:
         i.delete()
     #-----------  Fin  ---------------
+    #-----DATOS de observacion que no estoy utilizando ahora-------
     longuitud= observacion.longitude
     latitud= observacion.latitude 
     nombre = observacion.nombre

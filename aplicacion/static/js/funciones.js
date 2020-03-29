@@ -1,25 +1,31 @@
-
-function add_map_point(lon, lat,radio,nombre) {
+function add_point(lon, lat)
+{
     var vectorLayer = new ol.layer.Vector({
-    source:new ol.source.Vector({
-    features: [new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lon), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')), // Esas cordenadas se las pongo a mano, que es donde estan todos los restaurantes, en NEW YORK,ojo con el orden de lat y lng
-    })]
-    }),
-    style: new ol.style.Style({
-    image: new ol.style.Icon({
-    anchor: [0.5, 0.5],
-    anchorXUnits: "fraction",
-    anchorYUnits: "fraction",
-    src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
-    })
-    })
-    });
-
-    map.addLayer(vectorLayer);
+        source:new ol.source.Vector({
+        features: [new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform([parseFloat(lon), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857')), // Esas cordenadas se las pongo a mano, que es donde estan todos los restaurantes, en NEW YORK,ojo con el orden de lat y lng
+        })]
+        }),
+        style: new ol.style.Style({
+        image: new ol.style.Icon({
+        anchor: [0.5, 0.5],
+        anchorXUnits: "fraction",
+        anchorYUnits: "fraction",
+        src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg"
+        })
+        })
+        });
+    
+        map.addLayer(vectorLayer);
+}
     
 //---------------------circle WITH the point before--------------------------------------------------------------------------------------------------------- 
     
+function add_ratio(radio) {
+    
+
+    
+
 
     var layer = new ol.layer.Vector({
         source:new ol.source.Vector({
@@ -43,10 +49,13 @@ function add_map_point(lon, lat,radio,nombre) {
     map.addLayer(layer);
 
 
-
+}
 
 //------------------------------------------ICONO CON TEXTO EH IMAGEN-----------------------------------------------------------------------------------------------------------
  
+function icono(nombre)
+{
+
 
 
 var mapVectorSource = new ol.source.Vector({
@@ -57,16 +66,17 @@ var mapVectorLayer = new ol.layer.Vector({
 });
 map.addLayer(mapVectorLayer);
 
-function makeMovable(feature) {
-    var modify = new ol.interaction.Modify({
-        features: new ol.Collection([feature])
-    });
+// PARA QUE PUEDA MOVER EL ICONO
+// function makeMovable(feature) {
+//     var modify = new ol.interaction.Modify({
+//         features: new ol.Collection([feature])
+//     });
 
-    feature.on('change',function() {
-        console.log('Feature Moved To:' + this.getGeometry().getCoordinates());
-    }, feature);
-    return modify;
-}
+//     feature.on('change',function() {
+//         console.log('Feature Moved To:' + this.getGeometry().getCoordinates());
+//     }, feature);
+//     return modify;
+// }
 
 function createMarker(location, style){
     var iconFeature = new ol.Feature({
@@ -84,9 +94,7 @@ iconStyle = [
             anchorXUnits: 'fraction',
             anchorYUnits: 'fraction',
             src: 'https://openlayers.org/en/v3.20.1/examples/data/icon.png',  //EL ICONO ELEGIDO
-        }))
-    }),
-    new ol.style.Style({  
+        })),
         text: new ol.style.Text({
             text: nombre,
             offsetY: -55,               //MOVEMOS EL TEXTO ARRIBA O ABAJO
@@ -94,18 +102,15 @@ iconStyle = [
                 color: '#bf1d94'        //COLOR DEL TEXTO
             })
         })
-    })
+    }),
+   
 ];
 var marker = createMarker(ol.proj.transform([parseFloat(lon), parseFloat(lat)], 'EPSG:4326', 'EPSG:3857'), iconStyle);
 mapVectorSource.addFeature(marker);
-var modifyInteraction = makeMovable(marker);
-map.addInteraction(modifyInteraction);
+// var modifyInteraction = makeMovable(marker);
+// map.addInteraction(modifyInteraction);
 
 
-
-// var popup = new ol.Overlay.Popup();
-// map.addOverlay(popup);
-// popup.show(evt.coordinate, '<div><h2>Coordinates</h2><p>' + coor + '</p></div>');
 }
 
 
@@ -149,7 +154,45 @@ var vectorLayer = new ol.layer.Vector({
 
 // Add the vector layer to the map.
 map.addLayer(vectorLayer);
+}
 
+function mapa(overlay)
+{
+
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            // This illustrates a custom tiles source but for using
+            // official OpenStreetMap server new ol.source.OSM()
+            // instead of new ol.source.XYZ(...) is enough
+            source: new ol.source.XYZ({
+              attributions: [
+              ol.source.OSM.ATTRIBUTION,
+            
+                '<a href="http://openstreetmap.org">' +
+                '</a>'
+              ],
+              url: 'http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            })
+          })
+        ],
+        overlays: [overlay],
+        controls: ol.control.defaults({
+          // Set to display OSM attributions on the bottom right control
+          attributionOptions:  {
+            collapsed: false
+          }
+        }).extend([
+          new ol.control.ScaleLine() // Add scale line to the defaults controls
+        ]),
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-3.59, 37.18]), //Esto es para centrar el mapa en las coordenanadas que tu quieras poner a mano, pk todos los restaurantes estan en nueva york
+          zoom: 9
+        })
+      });
+
+      return map;
 }
 
 

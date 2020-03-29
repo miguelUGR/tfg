@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ejemplo mapa para Miguel</title>
+
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,URL"></script>
+
+    
+    {% load static %} 
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css" type="text/css">
+    <!-- <script src="{% static 'mapas/bibliotecas/openlayers/build/ol.js'%}"></script> -->
+    <!-- <link rel="stylesheet" href="{% static 'mapas/bibliotecas/openlayers/css/ol.css' %}"  type="text/css"> -->
+    <link rel="stylesheet" href="{% static 'mapas/css/mapa.css' %}" type="text/css">
+    <!-- <script src="{% static 'mapas/js/mapa.js'%}"></script> -->
+    <script src="{% static 'js/funciones.js'%}"></script>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+    
+    <!-- Este div es el bocadillo. Solo hay un bocadillo en la página pero se irá moviendo cuando el usuario haga click en cada punto -->
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content">Este es el <a href="javascript:;">texto</a> del bocadillo</div>
+    </div>
+    
+    <!-- Aquí creamos un div para cada uno de los puntos que queremos poner en el mapa con la información del bocadillo. data-lon y dta-lat guardaran la latitud y la longitud y dentro del div va el contenido en si del bocadillo (puede tener el código HTML que queramos) -->
+    <div id="info1" class="info" data-lon="-3.6" data-lat="37.18">
+      La <strong>madre</strong> que lo parió.
+    </div>
+    
+    <div id="info2" class="info" data-lon="-3.6" data-lat="37.20">
+      Contenido del <a href="javascript:;">bocadillo</a>.
+    </div>
+    
+    <div id="info3" class="info" data-lon="-3.63" data-lat="37.17">
+      <img src="https://img.icons8.com/pastel-glyph/2x/search--v1.png" style="float: right; width: 3em;" /> Con un icono y todo.
+    </div>
+     
+    <script >
+      
+      
+
+      var popup = document.getElementById('popup');
+      var contenidoPopup = document.getElementById('popup-content');
+      var botonCerrarPopup = document.getElementById('popup-closer');
+
+      /**
+       * Se crea una "sobrecapa" (overlay) para el popup
+       */
+      var overlay = new ol.Overlay({
+        element: popup,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250
+        }
+      });
+
+
+      /**
+       * Codigo para ocultar el popup cuando se pulse en la cruz
+       * @return {boolean} Don't follow the href.
+       */
+      botonCerrarPopup.onclick = function() {
+        overlay.setPosition(undefined);
+        botonCerrarPopup.blur();
+        return false;
+      };
+      
+      var map = mapa(overlay);
+      
+      map.on("click", function(e) {
+        map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+          lon = feature.values_.info.getAttribute("data-lon");
+          lat = feature.values_.info.getAttribute("data-lat");
+          texto = feature.values_.info.innerHTML;
+          coordinate = ol.proj.fromLonLat([lon, lat]);
+          overlay.setPosition(coordinate);
+          contenidoPopup.innerHTML = texto;
+            console.log(texto);
+        })
+    });
+
+    
+
+      var x = document.getElementsByClassName("info");
+      marcas = []
+      for (i of x) {
+        coor = ol.proj.fromLonLat([i.getAttribute("data-lon"),i.getAttribute("data-lat")]);
+        
+        marca = new ol.Feature({
+                      geometry: new ol.geom.Point(coor),
+                      info: i  // En la feature guardamos una referencia al div con su info asociada para luego poder mostrarla cuando se haga click en ella
+                    });
+        
+        marcas.push(marca);
+      }
+      var layer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+              features: marcas
+          })
+      });
+      
+      map.addLayer(layer);
+
+      
+    </script>
+  </body>
+</html> 
