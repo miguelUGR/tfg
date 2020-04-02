@@ -29,6 +29,7 @@ urlpatterns = [
     path('borrar_inscripcion',views.borrar_inscripciones,name='borrar_inscripcion'),
     path('borrar_confirmado_inscripcion',views.borrar_confirmado_inscripcion,name='borrar_confirmado_inscripcion'),
     path('crear_inscripcion',views.crear_inscripcion,name='crear_inscripcion'),
+    path('crear_inscripcion_all',views.crear_inscripcion_all,name='crear_inscripcion_all'),
 
     path('editar_usuario',views.edit_user,name='editar_usuario'),
     path('modificar_usuario',views.modificar_user,name='modificar_usuario'),

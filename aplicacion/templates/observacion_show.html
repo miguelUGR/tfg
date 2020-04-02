@@ -109,10 +109,7 @@
            <!-- Me creo los div con las coordenadas para hacer POPUP -->
           <div  class="info" data-lon="{{i.0}}" data-lat="{{i.1}}">
             <form style="text-align: center;" method="POST"  action="{% url 'ver_observatorio' %}">{% csrf_token %}
-              <button   class="btn btn-success btn-icon-split">
-                  <span class="icon text-white-50">
-                      <i class="fas fa-check"></i>
-                  </span>
+              <button   class="btn btn-warning btn-icon-split">
                   <span class="text">Ver Observatorio</span>
               </button>  
               <input type="hidden" name="observatorio" value="{{i.3}}">
@@ -189,14 +186,47 @@
           </script>
           <br>
           
-          <!-- <a class="btn btn-secondary btn-icon-split" onclick="add_map_point(lon,lat)">
-            <span class="icon text-white-50">
-              <i class="fas fa-arrow-right"></i>
-            </span>
-            <span style="color: seashell;" class="text">Mostrar Ubicacion</span>
-          </a>                 -->
+          
                         
     </div>
+    
+    {% if request.user.tipoUsuario == "AF" %}
+      
+        <div style="text-align: center; width: 95%; margin: auto; margin-top: 5%;" class="card bg-secondary text-white shadow">
+          <div class="card-body">
+            <h5>Seleccione los observatorios aun no inscritos</h5> 
+          </div>
+        </div>
+      
+      <div class="card-body">
+          <section class="border py-3">
+            <div class="form-check checkbox-warning-filled"><h6>Observatorios:</h6>
+            <div class="custom-control custom-checkbox">
+              <form  method="POST"  action="{% url 'crear_inscripcion_all' %}">{% csrf_token %}
+                {% for i in observatorios %}         
+                  <label ><input type="checkbox"  name="{{i.nombre}}" value="{{i.nombre}}"> {{i.nombre}}</label><br>  
+                {% endfor %}
+                <br>
+                <div style="text-align: center;">
+                  <button class="btn btn-success btn-icon-split" type="submit" >
+                    <span class="icon text-white-50">
+                      <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Inscribirse</span>
+                  </button>
+                </div>
+              </form>
+              
+            </div>
+             
+            </div>
+          
+          </section>
+      </div>
+
+    {% endif %}
+    
+    
   </div>
 </div>
 

@@ -43,8 +43,8 @@ def comun(request):
     notificaciones = Notificaciones.objects.all().filter(user=usuario_registrado).order_by('-date')#Filtro  solo las notificaciones del user registrado, para que no aparezcan de otros usuarios y ordenasas de mas nueva a mas vieja
     contador+=notificaciones.count()
     
-    print("CONTADOR=",contador)
-    print("Usuario Registrado tipo:",usuario_registrado.tipoUsuario)
+    # print("CONTADOR=",contador)
+    # print("Usuario Registrado tipo:",usuario_registrado.tipoUsuario)
    
     return (ifSoliAstro,notificaciones,contador)  
 
@@ -74,7 +74,9 @@ def listado_notificaciones(request):
 def ver_observacion(request):
     usuario_registrado=request.user
     data = request.POST.copy() #cogo todo lo que me viene 
+    print("DATOS=",data)
     nom_observacion = data['observacion']
+    request.session['observacion']=nom_observacion # Lo hago para crear_inscripcion_all()
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
     # -------- Notificaciones ----------
@@ -82,23 +84,30 @@ def ver_observacion(request):
     for i in notificaciones_a_borrar:
         i.delete()
     #-----------  Fin  ---------------
-    #-----DATOS de observacion que no estoy utilizando ahora-------
-    longuitud= observacion.longitude
-    latitud= observacion.latitude 
-    nombre = observacion.nombre
-
+   
+    #----ESTO es para mostrar los observatorios en el mapa inscritos en la observacion a ver --------- 
     datos = [] 
+    observatorios = []
+    observatorios_noInscritos = []
     if usuario_registrado.tipoUsuario == "AT":
-        print("Somos SUPER USER")
+        # print("Somos SUPER USER")
         inscripciones= Inscripciones.objects.all().filter(observaciones=observacion)
         for i in inscripciones:
             
             dato=[i.observatorios.longitude,i.observatorios.latitude,i.observatorios.radioMovilidad,i.observatorios.nombre]
-            print(dato)
+            # print(dato)
             datos.append(dato)
-        
+    #-----------  Fin  ---------------
+    else:
+        # print("voy a coger todos los observatorios PERO NO INSCRITOS EN LA OBSERVACION")       
+        observatorios=Observatorio.objects.all().filter(user= request.user.id) 
+        for i in observatorios:
+            if Inscripciones.objects.filter(observaciones=observacion,observatorios=i).exists() == False:         
+                observatorios_noInscritos.append(i)
+        #-----------  Fin  ---------------
+
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'nombre':nombre,'datos':datos})
+    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos,'observatorios':observatorios_noInscritos})
 
 def ver_observatorio(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -153,7 +162,7 @@ def inscripciones(request):
         else:
             pass
     return render(request,"inscripciones.html",{'inscripciones':inscripciones_totales,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
-   
+
 def solicitudAstro(request):
     solicitudAstro,notificaciones,contador=comun(request)
     usuarios= Usuario.objects.all().filter(solicitudAstro = True)
@@ -327,6 +336,23 @@ def crear_inscripcion(request):
         form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
     
     return render(request,'inscripciones_register.html',{'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
+
+
+def crear_inscripcion_all(request):
+    data = request.POST.copy()
+    # request.session['observacion']   PROCEDE de ver_observacion()
+    observacion=Observacion.objects.get(nombre=request.session['observacion'])
+    for i in data:
+        #Lo hago pk el form me envia un campo csrf_token entonces me petaria
+        if Observatorio.objects.filter(nombre=i).exists():
+            observatorio=Observatorio.objects.get(nombre=i)
+            print("------Procedemos a generar inscripcion-----")
+            new_inscripcion=Inscripciones(observaciones=observacion,observatorios=observatorio)               
+            new_inscripcion.save()
+        else:
+            print("No entra")
+            
+    return redirect(listado_observaciones)
 
 #----------------  ----------------  ----------------  BORRADO ----------------  ----------------  ----------------  
 def borrar_observaciones(request):
