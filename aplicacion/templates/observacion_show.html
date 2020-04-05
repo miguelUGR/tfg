@@ -67,8 +67,28 @@
           </div>
           
           <script type="text/javascript">
-          
+            var coordenadas="{{coordenadas}}";
+            var cords=coordenadas.split("_");// separo la cadena de string en unidades 
+            var newcords = cords.slice(0,-1);// quito el ultimo _ pk me añadiria un punto mas
+            //Paso el array de ["3"] a [3]
+            for (var i=0; i<newcords.length; i++)
+            {
+              newcords[i] = parseInt(newcords[i], 10);
+            }
+     
+            function pairArray(newcords) {
+                var temp = newcords.slice();
+                var array_couple = [];
 
+                while (temp.length) {
+                  array_couple.push(temp.splice(0,2));
+                }
+
+              return array_couple;
+            }
+
+            var couple_array=pairArray(newcords); // Convierto el array [0,1,2,4] a [[0,1],[2,3]]
+  
             var popup = document.getElementById('popup');
             var contenidoPopup = document.getElementById('popup-content');
             var botonCerrarPopup = document.getElementById('popup-closer');
@@ -94,12 +114,12 @@
               };
 
             var map=mapa(overlay);
-            /* hago : ME CREA LA observacion encima y no puedo clickear
+            /* Si hago : ME CREA LA observacion encima y no puedo clickear
             window.onload = function() {
                observaciones();
             /}; 
             */
-              observaciones();
+              observaciones(couple_array);
             
 
           
@@ -107,7 +127,7 @@
           <!-- ------Para los observatorios inscritos------ -->
           {% for i in datos %} 
            <!-- Me creo los div con las coordenadas para hacer POPUP -->
-          <div  class="info" data-lon="{{i.0}}" data-lat="{{i.1}}">
+          <div  class="info" data-lon="{{i.0}}" data-lat="{{i.1}}" nombre_obser="{{i.3}}">
             <form style="text-align: center;" method="POST"  action="{% url 'ver_observatorio' %}">{% csrf_token %}
               <button   class="btn btn-warning btn-icon-split">
                   <span class="text">Ver Observatorio</span>
@@ -122,9 +142,8 @@
             var lat = "{{i.1}}";//40.8502883] , quito el ]
             var radio= "{{i.2}}";
             var nombre = "{{i.3}}";
-            
             //------- CREO EL PUNTO,RADIO,ICONO de cada uno---
-            add_point(lon,lat);
+            add_point(lon,lat);  // LA PUEDO QUITAR PK SE LO ESTOY INCLUYENDO EN marca-->geometry
             add_ratio(radio);
             // icono(nombre);  //creo el icono en la feature de los POPUP
           </script>
@@ -139,11 +158,9 @@
                 coordinate = ol.proj.fromLonLat([lon, lat]);
                 overlay.setPosition(coordinate);
                 contenidoPopup.innerHTML = texto;
-                  console.log(texto);
-              })
-          });
-
-          
+                    console.log(texto);
+                })
+            });
 
             var x = document.getElementsByClassName("info");
             marcas = []
@@ -163,7 +180,7 @@
                           src: 'https://openlayers.org/en/v3.20.1/examples/data/icon.png',  //EL ICONO ELEGIDO
                       })),
                       text: new ol.style.Text({
-                          text: nombre,
+                          text: i.getAttribute("nombre_obser"),
                           offsetY: -55,               //MOVEMOS EL TEXTO ARRIBA O ABAJO
                           fill: new ol.style.Fill({
                               color: '#bf1d94'        //COLOR DEL TEXTO
@@ -190,7 +207,7 @@
                         
     </div>
     
-    {% if request.user.tipoUsuario == "AF" %}
+
       
         <div style="text-align: center; width: 95%; margin: auto; margin-top: 5%;" class="card bg-secondary text-white shadow">
           <div class="card-body">
@@ -224,7 +241,7 @@
           </section>
       </div>
 
-    {% endif %}
+
     
     
   </div>

@@ -48,7 +48,7 @@ class MiSignupForm(SignupForm):
 class ObservacionForm(forms.ModelForm):
     class Meta:
         model = Observacion 
-        fields = ('nombre','fecha_observacion','latitude','longitude','duracion_ocultacion','hora_inicio','hora_final','descripcion','image',) #user le indico en view.py que es el mismo registrado
+        fields = ('nombre','fecha_observacion','duracion_ocultacion','hora_inicio','hora_final','coordenadas','descripcion','image',) #user le indico en view.py que es el mismo registrado
 
 
 

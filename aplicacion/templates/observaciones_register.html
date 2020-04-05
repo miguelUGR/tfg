@@ -75,3 +75,131 @@
 {% endblock %}
 
 
+{% block secundario %}
+<div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
+  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+  <div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Mapa de mi Observacion</h6>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      
+      <div id="map" class="map"></div>
+      <br>
+      <div style="text-align: center;">
+        <button onclick="saveFigureMap()" class="btn btn-success btn-icon-split" type="submit" >
+          <span class="icon text-white-50">
+            <i class="fas fa-check"></i>
+          </span>
+          <span class="text">Guardar figura</span>
+        </button>
+      </div>
+    
+    <br>
+    <div id="text_save_map" style="text-align: center; color: green;"><h6> </h6></div>
+    <div id="text_no_save_map" style="text-align: center; color: red;"><h6>Figura observacion aun no guardada</h6></div>
+      <!-- Este div es el bocadillo. Solo hay un bocadillo en la página pero se irá moviendo cuando el usuario haga click en cada punto -->
+
+          <script type="text/javascript">
+
+
+            /**
+             * Se crea una "sobrecapa" (overlay) para el popup
+             */
+            var overlay = new ol.Overlay({
+              autoPan: true,
+              autoPanAnimation: {
+                duration: 250
+              }
+            });
+
+            var source = new ol.source.Vector({
+                wrapX: false
+            });
+
+            var vector = new ol.layer.Vector({
+                source: source,
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#cc0808',
+                        width: 2
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#ffcc33'
+                        })
+                    })
+                })
+            });
+            
+            var map=mapa(overlay);
+            vector.setMap(map);
+
+            var features, draw,coor, string_coord, list_string;
+
+            draw = new ol.interaction.Draw({
+                source: source,
+                type: 'Polygon'
+            });
+
+            map.addInteraction(draw);
+
+            // draw.on('drawend',  function(e) {
+            //     // lastFeature = e.feature;
+              
+            // })
+                    
+            draw.on('drawstart', function (e) {
+              save_No_FigureMap();
+              source.clear();  
+            });
+
+            // PARA INDICAR QUE guardamos las coordenadas
+            function saveFigureMap(){
+              document.getElementById("text_save_map").innerHTML="Mapa Guardado";
+              document.getElementById("text_no_save_map").innerHTML="";
+              obstener_coordenadas();
+            }
+            function save_No_FigureMap(){
+              document.getElementById("text_save_map").innerHTML="";
+              document.getElementById("text_no_save_map").innerHTML="Figura observacion aun no guardada";
+            }
+            
+            function obstener_coordenadas(){
+              list_string="";
+              // Get the array of features
+              features = vector.getSource().getFeatures();
+                // Go through this array and get coordinates of their geometry.
+                features.forEach(function(feature) {
+                  coor=feature.getGeometry().getCoordinates();
+                  coor[0].forEach(function(elemento,indice)
+                  {
+                    string_coord=elemento[0];
+                    list_string+= string_coord+'_';  // voy cogiendo cada numero y lo añado separado de_ 
+                    string_coord=elemento[1];
+                    list_string+=string_coord+'_';
+                    // console.log("pos1=", indice, "valor1=", elemento[0]);
+                    // console.log("pos2=", indice, "valor2=", elemento[1]);
+                  });
+                
+                  document.getElementById("id_coordenadas").value=list_string;
+                });
+            }
+
+          </script>
+      
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+

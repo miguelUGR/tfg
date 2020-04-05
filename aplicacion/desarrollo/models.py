@@ -51,14 +51,13 @@ class Observatorio(models.Model):
 class Observacion(models.Model):
     nombre = models.CharField(max_length=150,blank = False,unique=True)
     fecha_observacion= models.DateField() 
-    latitude = models.DecimalField(max_digits=100, decimal_places=16)
-    longitude = models.DecimalField(max_digits=100, decimal_places=16)
     duracion_ocultacion = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(200)],blank= False) 
     hora_inicio = models.DateTimeField(null=True, blank=True) #indico que puedes meter nulo 
     hora_final = models.DateTimeField(null=True, blank=True)
     descripcion = models.TextField()
     image = models.ImageField(upload_to='observacion/', height_field=None, width_field=None, max_length=100,blank=True,null=True)
     user = models.ForeignKey(Usuario,limit_choices_to={'tipoUsuario':'AT'},on_delete=models.CASCADE)
+    coordenadas = models.CharField(max_length=1000000,blank = False)
     def __str__(self):
         return self.nombre
     class Meta:

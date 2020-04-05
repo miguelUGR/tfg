@@ -29,78 +29,124 @@
         <!-- <link  href="{% static 'estilo.css' %}" rel="stylesheet" media="screen">
         <script src="{% static 'js/jquery-3.3.1.min.js'%}"></script> -->
         <script src="{% static 'js/funciones.js'%}"></script>
-        <link rel="stylesheet" href="{% static 'mapas/css/mapa.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/popup.css' %}" type="text/css">
         
     <meta charset="UTF-8">
     
 </head> 
 <body>
   
-  <legend>MAPA DE GRANADA:</legend>
-                <!-- <p id="Cord">{{coord}}</p> -->
-                <div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
-                  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
-                        <div id="map" class="map"></div>
-                        <div id="popup" class="ol-popup">
-                          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                          <div id="popup-content">Este es el <a href="javascript:;">texto</a> del bocadillo</div>
-                        </div>
-                        
-                        <script type="text/javascript">
-                          var lon = "{{longuitud}}"; //[-73.8786113 , quito el [
-                          var lat = "{{latitud}}";//40.8502883] , quito el ]
-                          var radio= "{{radio}}" 
+  <legend>MAPA DE GRANADA2:</legend>
+  <div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
+    <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Mapa de mi Observacion</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        
+        <div id="map" class="map"></div>
+        <!-- Este div es el bocadillo. Solo hay un bocadillo en la página pero se irá moviendo cuando el usuario haga click en cada punto -->
+        <div id="popup" class="ol-popup">
+          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+          <div id="popup-content">Este es el <a href="javascript:;">texto</a> del bocadillo</div>
+        </div>
+  
+            <script type="text/javascript">
+  
+              var popup = document.getElementById('popup');
+              var contenidoPopup = document.getElementById('popup-content');
+              var botonCerrarPopup = document.getElementById('popup-closer');
+  
+              /**
+               * Se crea una "sobrecapa" (overlay) para el popup
+               */
+              var overlay = new ol.Overlay({
+                element: popup,
+                autoPan: true,
+                autoPanAnimation: {
+                  duration: 250
+                }
+              });
+             
 
-                          var popup = document.getElementById('popup');
-                          var contenidoPopup = document.getElementById('popup-content');
-                          var botonCerrarPopup = document.getElementById('popup-closer');
+              // botonCerrarPopup.onclick = function() {
+              //   overlay.setPosition(undefined);
+              //   botonCerrarPopup.blur();
+              //   return false;
+              // };
+              
+              var map=mapa(overlay);
 
-                          /**
-                           * Se crea una "sobrecapa" (overlay) para el popup
-                           */
-                            var overlay = new ol.Overlay({
-                              element: popup,
-                              autoPan: true,
-                              autoPanAnimation: {
-                                duration: 250
-                              }
-                            });
+              var features = new ol.Collection();
+              var featureOverlay = new ol.layer.Vector({
+                source: new ol.source.Vector({features: features}),
+                style: new ol.style.Style({
+                  fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                  }),
+                  stroke: new ol.style.Stroke({
+                    color: '#ffcc33',
+                    width: 2
+                  }),
+                  image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                      color: '#ffcc33'
+                    })
+                  })
+                })
+              });
+              featureOverlay.setMap(map);
 
-                           /**
-                             * Codigo para ocultar el popup cuando se pulse en la cruz
-                             * @return {boolean} Don't follow the href.
-                            */
-                        
-                        botonCerrarPopup.onclick = function() {
-                          overlay.setPosition(undefined);
-                          botonCerrarPopup.blur();
-                          return false;
-                        };
+              var draw; // global so we can remove it later
+              function addInteraction() {
+                draw = new ol.interaction.Draw({
+                  features: features,
+                  // type: /** @type {ol.geom.GeometryType} */ (typeSelect.value)
+                  type : 'Polygon',
+                });
+                map.addInteraction(draw);
+              }
+              
+              var typeSelect = 'Polygon';
 
-                        var map=mapa(overlay);
+              typeSelect.onchange = function(e) {
+              map.removeInteraction(draw);
+              featureOverlay.clear();
+              addInteraction();
+              console.log("hola");
+              };
+              console.log("hola");
+              addInteraction();
+              
+              // map.on('singleclick', function (evt) {
+              //   var coordinate = evt.coordinate;
+  
+              //   var coor=ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        
+              //   //------- CREO EL POPUP---
+              //   contenidoPopup.innerHTML = 'Coordenadas:<code>' + '<p>'+coor[0]+'<br>'+ coor[1]+'</p> '+'</code>';
+              //   overlay.setPosition(coordinate);
+  
+              //   if (map.getLayers().getLength() > 1) {
+              //     map.getLayers().pop();
+              //   }
+              //   //------- CREO EL PUNTO---
+              //   add_point(coor[0],coor[1]);
+  
+              //   // map.getLayers().item(1).getSource().clear(); //elimina el iten 1
                  
-                        add_map_point(lon,lat,radio);
-                        
-                        
-                        
-                      
-
-                        map.on('singleclick', function(evt) {
-                          var coordinate = evt.coordinate;
-                          var hdms = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-                          contenidoPopup.innerHTML = 'Coordenadas:<code>' + '<p>'+hdms[0]+'<br>'+ hdms[1]+'</p> '
-                              '</code>';
-                          overlay.setPosition(coordinate);
-                          // if (map.getLayers().getLength() > 1) {
-                          //   map.getLayers().pop();
-                          // }
-                          
-                        });
-                        </script>
-                   
-                   
-                    <!-- <iframe width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-3.6276394128799443%2C37.1949759077155%2C-3.618680834770203%2C37.19880460126361&amp;layer=mapnik" style="border: 1px solid black"></iframe><br/><small><a href="https://www.openstreetmap.org/#map=18/37.19689/-3.62316">Ver mapa más grande</a></small> -->
-                </div>
+              // });
+              
+            </script>
+            <br>
+             
+      </div>
+    </div>
+  </div>
               
      
 </body>

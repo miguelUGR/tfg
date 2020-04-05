@@ -22,10 +22,6 @@ function add_point(lon, lat)
 //---------------------circle WITH the point before--------------------------------------------------------------------------------------------------------- 
     
 function add_ratio(radio) {
-    
-
-    
-
 
     var layer = new ol.layer.Vector({
         source:new ol.source.Vector({
@@ -48,14 +44,12 @@ function add_ratio(radio) {
 
     map.addLayer(layer);
 
-
 }
 
 //------------------------------------------ICONO CON TEXTO EH IMAGEN-----------------------------------------------------------------------------------------------------------
  
 function icono(nombre)
 {
-
 
 
 var mapVectorSource = new ol.source.Vector({
@@ -116,29 +110,31 @@ mapVectorSource.addFeature(marker);
 
 
 
+//------------------------------------POLYGON-----------------------------------------------------------------------------------------------------------------
 
 
 
-function observaciones()
+function observaciones(cords)
 {
-    //------------------------------------POLYGON-----------------------------------------------------------------------------------------------------------------
-
+    
 // A ring must be closed, that is its last coordinate
 // should be the same as its first coordinate.
 
-var ring = [
-    //      [0]                     [1]                     [2]                   [3]                     [4]   
-    [-8.944501, 37.01262],[0.224361,38.7532131],[0.77489,37.5994],[ -8.83798,35.8064677], [-8.944501, 37.01262]
-];
-  
+// var ring = [
+//     //      [0]                     [1]                     [2]                   [3]                     [4]   
+//     [-8.944501, 37.01262],[0.224361,38.7532131],[0.77489,37.5994],[ -8.83798,35.8064677], [-8.944501, 37.01262]
+// ];
+// console.log(ring);
+console.log(cords);
 // A polygon is an array of rings, the first ring is
 // the exterior ring, the others are the interior rings.
 // In your case there is one ring only.
-var polygon = new ol.geom.Polygon([ring]);
+var polygon = new ol.geom.Polygon([cords]);
 
 // Create feature with polygon.
 var feature = new ol.Feature(polygon);
-polygon.transform('EPSG:4326', 'EPSG:3857');
+// polygon.transform('EPSG:4326', 'EPSG:3857'); //NO TENGO QUE CAMBIAR LAS CORRDENADAS pk me las devuelve con el otro formato [-8944501, 3701262],[0224361,387532131],[077489,375994],[ -883798,35.8064677], [-8944501, 3701262]
+
 // Create vector source and the feature to it.
 var vectorSource = new ol.source.Vector();
 vectorSource.addFeature(feature);
@@ -155,6 +151,9 @@ var vectorLayer = new ol.layer.Vector({
 // Add the vector layer to the map.
 map.addLayer(vectorLayer);
 }
+
+//------------------------------------ MAPA -----------------------------------------------------------------------------------------------------------------
+
 
 function mapa(overlay)
 {

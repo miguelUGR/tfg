@@ -54,7 +54,10 @@ def observaciones(request):
     # observaciones=Observacion.objects.all()
     # observaciones= observaciones.filter(user_id = usuario_registrado)
     # ----las dos lineas anteriores hacen lo mismo que la siguiente ----
-    observaciones=Observacion.objects.all().filter(user= request.user.id)
+    print("----PEDRO--")
+    observaciones=Observacion.objects.all().filter(user=request.user.id)
+    for i in observaciones:
+        print("OBservacion: ",i.nombre)
     return render (request,"observaciones.html",{'observacion':observaciones,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
 
 def listado_observaciones(request):
@@ -74,7 +77,7 @@ def listado_notificaciones(request):
 def ver_observacion(request):
     usuario_registrado=request.user
     data = request.POST.copy() #cogo todo lo que me viene 
-    print("DATOS=",data)
+    # print("DATOS=",data)
     nom_observacion = data['observacion']
     request.session['observacion']=nom_observacion # Lo hago para crear_inscripcion_all()
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
@@ -98,16 +101,17 @@ def ver_observacion(request):
             # print(dato)
             datos.append(dato)
     #-----------  Fin  ---------------
-    else:
-        # print("voy a coger todos los observatorios PERO NO INSCRITOS EN LA OBSERVACION")       
-        observatorios=Observatorio.objects.all().filter(user= request.user.id) 
-        for i in observatorios:
-            if Inscripciones.objects.filter(observaciones=observacion,observatorios=i).exists() == False:         
-                observatorios_noInscritos.append(i)
-        #-----------  Fin  ---------------
-
+    
+    #---Obstener todos los observatorios no inscritos en la observacion      
+    observatorios=Observatorio.objects.all().filter(user= request.user.id) 
+    for i in observatorios:
+        if Inscripciones.objects.filter(observaciones=observacion,observatorios=i).exists() == False:         
+            observatorios_noInscritos.append(i)
+    #-----------  Fin  ---------------
+    coordenadas=observacion.coordenadas
+    # print("Coordenadas:"+coordenadas)
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos,'observatorios':observatorios_noInscritos})
+    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos,'observatorios':observatorios_noInscritos,'coordenadas':coordenadas})
 
 def ver_observatorio(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -177,7 +181,8 @@ def edit_observaciones(request):
     # print(nom_observacion)
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
-    return render(request, 'observaciones_edit.html', {"form":form,"nom_observacion":nom_observacion,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})#tambien envio nombre del plato pk me hace falta
+    coordenadas=observacion.coordenadas
+    return render(request, 'observaciones_edit.html', {"form":form,"nom_observacion":nom_observacion,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'coordenadas':coordenadas})#tambien envio nombre del plato pk me hace falta
 
 def edit_observatorios(request):
     solicitudAstro,notificaciones,contador=comun(request)
@@ -297,7 +302,7 @@ def crear_observaciones(request):
         form = ObservacionForm(request.POST)
         if form.is_valid():
             observacion = form.save(commit=False)# lo que hago con estros tres pasos es decirle que me guarde el usuario logeado 
-            observacion.user = user
+            observacion.user = request.user
             observacion.save()
             return redirect(observaciones)
         else:
@@ -314,7 +319,7 @@ def crear_observatorio(request):
         form = ObservatorioForm(request.POST)
         if form.is_valid():
             observatorio = form.save(commit=False) # lo que hago con estros tres pasos es decirle que me guarde el usuario logeado
-            observatorio.user= user
+            observatorio.user= request.user
             observatorio.save()
             return redirect(observatorios)   
     else:   
@@ -356,7 +361,7 @@ def crear_inscripcion_all(request):
 
 #----------------  ----------------  ----------------  BORRADO ----------------  ----------------  ----------------  
 def borrar_observaciones(request):
-    solicitudAstro,notificaciones=comun(request)
+    solicitudAstro,notificaciones,contador=comun(request)
     data = request.POST.copy()
     request.session['observacion_borrar']=data['observacion']
     return render(request,'observaciones_borrado.html',{'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
