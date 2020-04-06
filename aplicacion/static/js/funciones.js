@@ -124,8 +124,10 @@ function observaciones(cords)
 //     //      [0]                     [1]                     [2]                   [3]                     [4]   
 //     [-8.944501, 37.01262],[0.224361,38.7532131],[0.77489,37.5994],[ -8.83798,35.8064677], [-8.944501, 37.01262]
 // ];
+
 // console.log(ring);
-console.log(cords);
+// console.log(cords);
+
 // A polygon is an array of rings, the first ring is
 // the exterior ring, the others are the interior rings.
 // In your case there is one ring only.

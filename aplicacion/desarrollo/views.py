@@ -208,7 +208,6 @@ def edit_user(request):
     return render(request,'usuarios_edit.html',{'name_user':user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
 
 def aceptar_notifi_Astro(request):
-    solicitudAstro,notificaciones=comun(request)
     data = request.POST.copy()
     usuario= Usuario.objects.get(id = data['notificacion'])
     usuario.tipoUsuario='AT'
