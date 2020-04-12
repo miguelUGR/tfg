@@ -211,7 +211,7 @@
       
         <div style="text-align: center; width: 95%; margin: auto; margin-top: 5%;" class="card bg-secondary text-white shadow">
           <div class="card-body">
-            <h5>Seleccione los observatorios aun no inscritos</h5> 
+            <h5> Observatorios aun no inscritos</h5> 
           </div>
         </div>
       
@@ -220,7 +220,7 @@
             <div class="form-check checkbox-warning-filled"><h6>Observatorios:</h6>
             <div class="custom-control custom-checkbox">
               <form  method="POST"  action="{% url 'crear_inscripcion_all' %}">{% csrf_token %}
-                {% for i in observatorios %}         
+                {% for i in observatorios_noInscritos %}         
                   <label ><input type="checkbox"  name="{{i.nombre}}" value="{{i.nombre}}"> {{i.nombre}}</label><br>  
                 {% endfor %}
                 <br>
@@ -240,6 +240,38 @@
           
           </section>
       </div>
+
+      <div style="text-align: center; width: 95%; margin: auto; margin-top: 5%;" class="card bg-secondary text-white shadow">
+        <div class="card-body">
+          <h5>Observatorios   inscritos</h5> 
+        </div>
+      </div>
+    
+    <div class="card-body">
+        <section class="border py-3">
+          <div class="form-check checkbox-warning-filled"><h6>Observatorios:</h6>
+          <div class="custom-control custom-checkbox">
+            <form  method="POST"  action="{% url 'crear_desinscripcion_all' %}">{% csrf_token %}
+              {% for i in observatorios_Inscritos %}         
+                <label ><input type="checkbox"  name="{{i.nombre}}" value="{{i.nombre}}"> {{i.nombre}}</label><br>  
+              {% endfor %}
+              <br>
+              <div style="text-align: center;">
+                <button class="btn btn-danger btn-icon-split" type="submit" >
+                  <span class="icon text-white-50">
+                    <i class="fas fa-check"></i>
+                  </span>
+                  <span class="text">Desinscribirse</span>
+                </button>
+              </div>
+            </form>
+            
+          </div>
+           
+          </div>
+        
+        </section>
+    </div>
 
 
     

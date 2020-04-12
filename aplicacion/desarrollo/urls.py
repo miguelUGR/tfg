@@ -26,10 +26,13 @@ urlpatterns = [
     path('crear_observatorio',views.crear_observatorio,name='crear_observatorio'),
 
     path('inscripcion',views.inscripciones,name='inscripcion'),
+    path('editar_inscripcion',views.edit_inscripciones,name='editar_inscripcion'),
+    path('modificar_inscripcion',views.modificar_inscripcion,name='modificar_inscripcion'),
     path('borrar_inscripcion',views.borrar_inscripciones,name='borrar_inscripcion'),
     path('borrar_confirmado_inscripcion',views.borrar_confirmado_inscripcion,name='borrar_confirmado_inscripcion'),
     path('crear_inscripcion',views.crear_inscripcion,name='crear_inscripcion'),
     path('crear_inscripcion_all',views.crear_inscripcion_all,name='crear_inscripcion_all'),
+    path('crear_desinscripcion_all',views.crear_desinscripcion_all,name='crear_desinscripcion_all'),
 
     path('editar_usuario',views.edit_user,name='editar_usuario'),
     path('modificar_usuario',views.modificar_user,name='modificar_usuario'),

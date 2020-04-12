@@ -78,20 +78,20 @@ class Inscripciones(models.Model):
     opcionInscripcion= models.CharField(max_length = 9, choices = OPCION_INSCRIPCION, default='NEU' )
     
     class Meta:#para crear clave primaria de dos campos
-        unique_together  = ["observaciones", "observatorios"]
+        unique_together = (("observaciones","observatorios"),) #ESTA ES LA MANERA EXACTA DE PONER UN unique
+        verbose_name_plural='Inscripciones'
         
-    def clean(self):
-        direct = Inscripciones.objects.filter(observaciones = self.observaciones, observatorios = self.observatorios)
-        reverse = Inscripciones.objects.filter(observatorios = self.observatorios, observaciones = self.observaciones) 
+    # def clean(self): NO FUNCIONA BIEN PARA LA EDICION
+    #     direct = Inscripciones.objects.filter(observaciones = self.observaciones, observatorios = self.observatorios)
+    #     reverse = Inscripciones.objects.filter(observatorios = self.observatorios, observaciones = self.observaciones) 
 
-        if direct.exists() or reverse.exists():
-            raise ValidationError({'observaciones':'observatorios'})
+    #     if direct.exists() or reverse.exists():
+    #         raise ValidationError({'observaciones':'observatorios'+' Incompatibilidades por repeticion'})
     
     def __str__(self):
         return str(self.id_inscripcion)+"_["+str(self.observaciones)+"]_["+str(self.observatorios)+"]"
         # return str(self.id_inscripcion)
-    class Meta:
-        verbose_name_plural='Inscripciones'
+        
 
 class Notificaciones(models.Model):
     id_notificacion = models.AutoField(primary_key=True)

@@ -54,7 +54,18 @@
                         <td>{{i.id_inscripcion}}</td>
                         <td>{{i.observaciones}}</td>
                         <td>{{i.observatorios}}</td>
-            
+                        <td>
+                          <form method="POST"  action="{% url 'editar_inscripcion' %}">{% csrf_token %}
+                              <button   class="btn btn-success btn-icon-split">
+                                  <span class="icon text-white-50">
+                                      <i class="fas fa-check"></i>
+                                  </span>
+                                  <span class="text">Editar</span>
+                                  
+                              </button> 
+                              <input type="hidden" name="inscripcion" value="{{i.id_inscripcion}}">
+                          </form> 
+                      </td>
                         <td>
                             <form method="POST"  action="{% url 'borrar_inscripcion' %}">{% csrf_token %}
                                 <button   class="btn btn-danger btn-icon-split">

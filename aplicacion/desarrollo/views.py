@@ -79,7 +79,7 @@ def ver_observacion(request):
     data = request.POST.copy() #cogo todo lo que me viene 
     # print("DATOS=",data)
     nom_observacion = data['observacion']
-    request.session['observacion']=nom_observacion # Lo hago para crear_inscripcion_all()
+    request.session['observacion']=nom_observacion # Lo hago para la funcion crear_inscripcion_all() 
     observacion = Observacion.objects.get(nombre = nom_observacion) #cogo de mi base de datos el que previamente habia seleccionado
     form = ObservacionForm(instance = observacion) #envio a la nueva pag.html el formulario pero rellenado con el plato seleccionado previamente
     # -------- Notificaciones ----------
@@ -92,6 +92,7 @@ def ver_observacion(request):
     datos = [] 
     observatorios = []
     observatorios_noInscritos = []
+    observatorios_Inscritos = []
     if usuario_registrado.tipoUsuario == "AT":
         # print("Somos SUPER USER")
         inscripciones= Inscripciones.objects.all().filter(observaciones=observacion)
@@ -102,16 +103,21 @@ def ver_observacion(request):
             datos.append(dato)
     #-----------  Fin  ---------------
     
-    #---Obstener todos los observatorios no inscritos en la observacion      
+    #------Obstener todos los observatorios no inscritos en la observacion -----------      
     observatorios=Observatorio.objects.all().filter(user= request.user.id) 
     for i in observatorios:
         if Inscripciones.objects.filter(observaciones=observacion,observatorios=i).exists() == False:         
             observatorios_noInscritos.append(i)
+        else: # Este else lo añado pk ahora queremos representar en el mapa para los aficionados los observatorios inscritos en la observacion que selecciona  ver
+            observatorios_Inscritos.append(i)
+            if usuario_registrado.tipoUsuario == "AF":
+                dato=[i.longitude,i.latitude,i.radioMovilidad,i.nombre]
+                datos.append(dato)
     #-----------  Fin  ---------------
     coordenadas=observacion.coordenadas
     # print("Coordenadas:"+coordenadas)
     solicitudAstro,notificaciones,contador=comun(request)#Lo pongo aqui abajo pk no se actualiza
-    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos,'observatorios':observatorios_noInscritos,'coordenadas':coordenadas})
+    return render(request, 'observacion_show.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'datos':datos,'observatorios_noInscritos':observatorios_noInscritos,'observatorios_Inscritos':observatorios_Inscritos,'coordenadas':coordenadas})
 
 def ver_observatorio(request):
     data = request.POST.copy() #cogo todo lo que me viene 
@@ -198,6 +204,17 @@ def edit_observatorios(request):
     
     return render(request, 'observatorios_edit.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador,'latitud':latitud,'longuitud':longuitud,'radio':radio,'nombre':nombre})
 
+def edit_inscripciones(request):
+    solicitudAstro,notificaciones,contador=comun(request)
+    data = request.POST.copy() #cogo todo lo que me viene 
+    request.session['inscripcion_vieja']=data['inscripcion']
+
+    inscripcion=Inscripciones.objects.get(id_inscripcion = request.session['inscripcion_vieja'])
+    form = InscripcionesForm(instance = inscripcion)
+    form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
+
+    return render(request, 'inscripciones_edit.html', {"form":form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
+
 
 def edit_user(request):
     solicitudAstro,notificaciones,contador=comun(request)
@@ -206,6 +223,8 @@ def edit_user(request):
     # print (user) # user no es iterable
     form =UsuarioChangeForm (instance = request.user)
     return render(request,'usuarios_edit.html',{'name_user':user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
+
+
 
 def aceptar_notifi_Astro(request):
     data = request.POST.copy()
@@ -232,7 +251,7 @@ def modificar_observacion(request):
     data = request.POST.copy() #cogo todo lo que me viene
     if request.method == "POST":
         observacion_vieja = Observacion.objects.get(nombre=data['observacion_vieja']) #cojo el plato con el nombre digamos viejo, para que cuando le demos a guardar, GUARDE TODO LO RECIBIDO EN EL PLATO DIGAMOS YA EXISTENTE, pk imagina que cambiamos el nombre, pues para que no te cree uno nuevo,O QUE AL CAMBIAR EL NOMBRE, EN OTRO CAMPO ME HE EQUIVOCADO y repito, entonces debo tener el nombre viejo, pk aun no he modificado nada
-        form = ObservacionForm(request.POST, request.FILES, instance=observacion_vieja) #Indicamos que el formulario que ha creado , tenga los datos que hemos rellenado y lo subcriba  en la instancia que le pasamos
+        form = ObservacionForm(request.POST, request.FILES, instance=observacion_vieja) #Indicamos que el formulario que ha creado , tenga los datos que hemos rellenado y lo subcriba  en la instancia que le pasamos ... request.FILES si lo quito funciona bien, no se pk dicen que es importante
         if form.is_valid():#aqui comprovamos que todo  son datos validados correctamente y lo guardamos
             form.save()  
 #----------APARTADO--NOTIFICACIONES-----------
@@ -276,6 +295,23 @@ def modificar_observatorio(request):
                 form.save()
                 return redirect(observatorios)
             return render(request,'observatorios_edit.html',{'name_user':request.user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
+
+
+def modificar_inscripcion(request):
+    solicitudAstro,notificaciones,contador=comun(request)
+    if request.session['inscripcion_vieja']:
+        if request.method == "POST":
+            inscripcion_vieja=Inscripciones.objects.get(id_inscripcion = request.session['inscripcion_vieja'])
+            print(inscripcion_vieja)
+            form = InscripcionesForm(request.POST,request.FILES,instance=inscripcion_vieja)          
+            if form.is_valid():
+                print("VALIDO A TOPE DE PAWWEFA")
+                form.save()
+                return redirect(inscripciones)
+
+            print("mall mall malll ")
+            return render(request,'inscripciones_edit.html',{'name_user':request.user,'form':form,'solicitudAstro':solicitudAstro,'notificacion':notificaciones,'contador':contador})
+
 
 def modificar_user(request):
     solicitudAstro,notificaciones,contador=comun(request)
@@ -334,7 +370,7 @@ def crear_inscripcion(request):
             inscripcion = form.save()
             return redirect(inscripciones)
     else:
-        print("lalalal")
+        # print("lalalal")
         form = InscripcionesForm()
         # Lo que digo , es que de  todos los observatorios, solo aparezcan los del propio usuario registrado
         form.fields['observatorios'].queryset=Observatorio.objects.filter(user=request.user.id)
@@ -357,6 +393,25 @@ def crear_inscripcion_all(request):
             print("No entra")
             
     return redirect(listado_observaciones)
+
+
+def crear_desinscripcion_all(request):
+    data = request.POST.copy()
+    observacion=Observacion.objects.get(nombre=request.session['observacion'])
+    for i in data:
+        #Lo hago pk el form me envia un campo csrf_token entonces me petaria
+        if Observatorio.objects.filter(nombre=i).exists():
+            observatorio=Observatorio.objects.get(nombre=i)
+            if Inscripciones.objects.filter(observaciones=observacion,observatorios=observatorio).exists():
+                inscripcion_a_borrar=Inscripciones.objects.filter(observaciones=observacion,observatorios=observatorio)
+                inscripcion_a_borrar.delete()        
+        else:
+            print("No entra")
+            
+    return redirect(listado_observaciones)
+
+    
+
 
 #----------------  ----------------  ----------------  BORRADO ----------------  ----------------  ----------------  
 def borrar_observaciones(request):
