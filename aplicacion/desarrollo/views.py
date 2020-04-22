@@ -54,7 +54,6 @@ def observaciones(request):
     # observaciones=Observacion.objects.all()
     # observaciones= observaciones.filter(user_id = usuario_registrado)
     # ----las dos lineas anteriores hacen lo mismo que la siguiente ----
-    print("----PEDRO--")
     observaciones=Observacion.objects.all().filter(user=request.user.id)
     for i in observaciones:
         print("OBservacion: ",i.nombre)
@@ -261,14 +260,20 @@ def modificar_observacion(request):
             user = []
             if  Inscripciones.objects.all().filter(observaciones_id = observacion_vieja).exists(): # al poner un AutoField puede dar el caso de que tenga dos observaciones con distinto observatorio y me peta
                 print("--ESTAMOS En NOTIFICACIONES--")
-                inscripciones=Inscripciones.objects.all().filter(observaciones_id = observacion_vieja)
+                inscripciones=Inscripciones.objects.all().filter(observaciones_id = observacion_vieja) # Cojo todas las incripciones de la observacion modificada
                 # print(inscripciones) #Es un queryset, debemos hacer un bucle
                 for i in inscripciones: # Obtengo todos los observatorios 
                     observatorio.append(i.observatorios)
                   
                 for i in observatorio:#Cojo todos los usuarios eliminando repetido(puede dar el caso, usuario con mas de un observatorio en la misma observacion)
-                       if i.user not in user:  # elimino repetidos, para no generar notificaciones repetidas
-                           user.append(i.user)
+                    if i.user not in user:  # elimino repetidos, para no generar notificaciones repetidas
+                        usuario = Usuario.objects.get(username=i.user)  
+                        if usuario.tipoUsuario == "AF":
+                            # no quiero que un usuario Astrofisico que tenga inscritos observatorios en su propia observación se notifique a si mismo.
+                            user.append(i.user)
+
+                        print(usuario)
+                        
                 for i in user:
                    # Antes de meter notificaciones, tengo que eliminar la o las anteriores. (no deberia de haber mas de una, pk pretendo eliminarlas)
                     if Notificaciones.objects.filter(user=i,observacion=observacion_vieja).exists(): #esto petaria si hay mas de una, pero no debe de haber (PUES NO PETA)
@@ -386,11 +391,10 @@ def crear_inscripcion_all(request):
         #Lo hago pk el form me envia un campo csrf_token entonces me petaria
         if Observatorio.objects.filter(nombre=i).exists():
             observatorio=Observatorio.objects.get(nombre=i)
-            print("------Procedemos a generar inscripcion-----")
+            # print("------Procedemos a generar inscripcion-----")
             new_inscripcion=Inscripciones(observaciones=observacion,observatorios=observatorio)               
             new_inscripcion.save()
-        else:
-            print("No entra")
+        
             
     return redirect(listado_observaciones)
 
@@ -405,8 +409,7 @@ def crear_desinscripcion_all(request):
             if Inscripciones.objects.filter(observaciones=observacion,observatorios=observatorio).exists():
                 inscripcion_a_borrar=Inscripciones.objects.filter(observaciones=observacion,observatorios=observatorio)
                 inscripcion_a_borrar.delete()        
-        else:
-            print("No entra")
+        
             
     return redirect(listado_observaciones)
 

@@ -3,7 +3,7 @@
 {% block pagina %}
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Observatorio</h1>
+    <h1 class="h3 mb-0 text-gray-100">Observatorio</h1>
 </div>
 {% endblock %}
 
@@ -19,7 +19,7 @@
 
 {% block secundario %}
 <div style="margin-left: auto; margin-right: auto;  max-width:48%; flex: auto;" class="col-xl-4 col-lg-5">
-  <h1 class="h3 mb-2 text-gray-800">Mapa</h1>
+  <h1 class="h3 mb-2 text-gray-100">Mapa</h1>
   <div class="card shadow mb-4">
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -93,7 +93,7 @@
             var nombre = "{{i.3}}";
             //------- CREO EL PUNTO,RADIO,ICONO de cada uno---
             add_point(lon,lat);
-            add_ratio(radio);
+            add_ratio(radio,lon,lat);
             // icono(nombre);  //creo el icono en la feature de los POPUP
 
           </script>

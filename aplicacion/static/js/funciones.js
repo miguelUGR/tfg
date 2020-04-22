@@ -21,7 +21,7 @@ function add_point(lon, lat)
     
 //---------------------circle WITH the point before--------------------------------------------------------------------------------------------------------- 
     
-function add_ratio(radio) {
+function add_ratio(radio,lon,lat) {
 
     var layer = new ol.layer.Vector({
         source:new ol.source.Vector({
