@@ -8,7 +8,13 @@
 </div>
 {% endblock %}
 
-
+{% block observatorioPropios %}
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'listado_observatorios' %}">
+          <i class="fas fa-fw fa-table"></i>
+          <span>Listar</span></a>
+      </li>
+{% endblock %}
 
 {% block listado %}
 <!-- Begin Page Content -->

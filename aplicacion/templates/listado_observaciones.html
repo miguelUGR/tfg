@@ -8,8 +8,14 @@
 </div>
 {% endblock %}
 
-
-
+{% block observacionPropios %}
+      <!-- Nav Item - Charts -->
+      <li class="nav-item active ">
+        <a class="nav-link" href="{% url 'listado_observaciones' %}">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Listado</span></a>
+      </li>
+      {% endblock %}
 {% block listado %}
 <!-- Begin Page Content -->
         <div class="container-fluid">

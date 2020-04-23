@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zjfv$ys!&--!wds!$#2ub*yb0yhvc+ke9eic^1jtq=0sf!r$k0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True #si ponemos TRUE, muestra la pagina error por defecto y no es conveniente que indice a nadie las urls disponibles
 
 #ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*'] #añadimos '*' para que arranque desde cualquier lado

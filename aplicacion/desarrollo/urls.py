@@ -10,7 +10,7 @@ urlpatterns = [
     path('index2', views.hola2, name='index2'),
     path('inicio',views.iniciar, name='inicio'),
     path('base',views.base, name='base'),
-
+    
     path('observacion',views.observaciones,name='observacion'),
     path('editar_observacion',views.edit_observaciones,name='editar_observacion'),
     path('modificar_observacion', views.modificar_observacion, name='modificar_observacion'),
