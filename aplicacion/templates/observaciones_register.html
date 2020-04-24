@@ -192,9 +192,10 @@
               document.getElementById("text_save_map").innerHTML="";
               document.getElementById("text_no_save_map").innerHTML="Figura observacion aun no guardada";
             }
-            
+             var new_coord= [];
             function obstener_coordenadas(){
-              list_string="";
+              list_string=""; 
+              
               // Get the array of features
               features = vector.getSource().getFeatures();
                 // Go through this array and get coordinates of their geometry.
@@ -202,12 +203,14 @@
                   coor=feature.getGeometry().getCoordinates();
                   coor[0].forEach(function(elemento,indice)
                   {
+                    //Debo de cambiar el formato de [-8944501, 3701262] a [-8.944501, 37.01262]
+                    elemento = ol.proj.transform(elemento, 'EPSG:3857', 'EPSG:4326'); // tengo que hacerlo por unidad PAR
                     string_coord=elemento[0];
                     list_string+= string_coord+'_';  // voy cogiendo cada numero y lo añado separado de_ 
                     string_coord=elemento[1];
                     list_string+=string_coord+'_';
-                    // console.log("pos1=", indice, "valor1=", elemento[0]);
-                    // console.log("pos2=", indice, "valor2=", elemento[1]);
+                    console.log("pos1=", indice, "valor1=", elemento[0]);
+                    console.log("pos2=", indice, "valor2=", elemento[1]);
                   });
                 
                   document.getElementById("id_coordenadas").value=list_string;

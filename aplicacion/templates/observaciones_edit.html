@@ -118,11 +118,12 @@
             var cords=coordenadas.split("_");// separo la cadena de string en unidades 
             var newcords = cords.slice(0,-1);// quito el ultimo _ pk me añadiria un punto mas
             //Paso el array de ["3"] a [3]
+            
             for (var i=0; i<newcords.length; i++)
             {
-              newcords[i] = parseInt(newcords[i], 10);
+              newcords[i] = parseFloat(newcords[i], 10); //si trabajara con el otro formato [-8944501, 3701262] deberia ser parseInt
             }
-     
+           
             function pairArray(newcords) {
                 var temp = newcords.slice();
                 var array_couple = [];
@@ -133,9 +134,9 @@
 
               return array_couple;
             }
-
+            
             var couple_array=pairArray(newcords); // Convierto el array [0,1,2,4] a [[0,1],[2,3]]
- 
+            
             /**
              * Se crea una "sobrecapa" (overlay) para el popup
              */
@@ -215,6 +216,8 @@
                   coor=feature.getGeometry().getCoordinates();
                   coor[0].forEach(function(elemento,indice)
                   {
+                    //Debo de cambiar el formato de [-8944501, 3701262] a [-8.944501, 37.01262]
+                    elemento = ol.proj.transform(elemento, 'EPSG:3857', 'EPSG:4326'); // tengo que hacerlo por unidad PAR
                     string_coord=elemento[0];
                     list_string+= string_coord+'_';  // voy cogiendo cada numero y lo añado separado de_ 
                     string_coord=elemento[1];

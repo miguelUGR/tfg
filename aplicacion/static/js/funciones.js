@@ -116,7 +116,8 @@ mapVectorSource.addFeature(marker);
 
 function observaciones(cords)
 {
-    
+  // console.log("Coordenadas=",cords);
+ 
 // A ring must be closed, that is its last coordinate
 // should be the same as its first coordinate.
 
@@ -135,8 +136,8 @@ var polygon = new ol.geom.Polygon([cords]);
 
 // Create feature with polygon.
 var feature = new ol.Feature(polygon);
-// polygon.transform('EPSG:4326', 'EPSG:3857'); //NO TENGO QUE CAMBIAR LAS CORRDENADAS pk me las devuelve con el otro formato [-8944501, 3701262],[0224361,387532131],[077489,375994],[ -883798,35.8064677], [-8944501, 3701262]
-
+ polygon.transform('EPSG:4326', 'EPSG:3857'); //NO TENGO QUE CAMBIAR LAS CORRDENADAS pk me las devuelve con el otro formato [-8944501, 3701262],[0224361,387532131],[077489,375994],[ -883798,35.8064677], [-8944501, 3701262]
+// polygon.transform( 'EPSG:3857','EPSG:4326');
 // Create vector source and the feature to it.
 var vectorSource = new ol.source.Vector();
 vectorSource.addFeature(feature);

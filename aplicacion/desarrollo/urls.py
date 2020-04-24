@@ -51,6 +51,6 @@ urlpatterns = [
     path('denegar_notifi_Astro',views.denegar_notifi_Astro,name='denegar_notifi_Astro'),
 
     path('borrar_confirmado_notifi_Astro',views.borrar_confirmado_notifi_Astro,name='borrar_confirmado_notifi_Astro'),
-
+    
 ] 
 

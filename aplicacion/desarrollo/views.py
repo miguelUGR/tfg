@@ -15,12 +15,12 @@ def iniciar(request):
     # return render (request,"login.html")
     return HttpResponseRedirect("/accounts/login/")
 
-from django.views.defaults import page_not_found
 
-
-def error_404_view(request, exception):
-    # print("ERROR GARRAFAL")
-    return render(request,'404.html')
+#...
+#404: página no encontrada
+# def handler404(request,exception):
+#     return render(request,"404.html")
+ 
 
 def edit_passwd(request):
     return HttpResponseRedirect("/accounts/password/change/")

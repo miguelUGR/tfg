@@ -80,7 +80,7 @@
             //Paso el array de ["3"] a [3]
             for (var i=0; i<newcords.length; i++)
             {
-              newcords[i] = parseInt(newcords[i], 10);
+              newcords[i] = parseFloat(newcords[i], 10);//si trabajara con el otro formato [-8944501, 3701262] deberia ser parseInt
             }
      
             function pairArray(newcords) {
